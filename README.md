@@ -12,6 +12,7 @@
 
 ## 仓库目录
 
+```
 ├─CustomActivities	# 统一管理自定义 Activity （每个自定义 Activity 置于 一个文件夹内）
 
 │  ├─SendMail	# 自定义 SendMail Activity（示例）
@@ -19,6 +20,7 @@
 │  │   └─SomeResources……
 
 │  └─OtherActivity……
+
 └─StudioClient	# 客户端程序，主要包含用户界面及交互逻辑
 
     ├─Common	# 公共类，一些工具类、Model 类等
@@ -30,6 +32,6 @@
     │  └─Images
 
     ├─Template	# 用于存放各类工作流模板
-    
-    └─Views	# 用户界面及交互逻辑
 
+    └─Views	# 用户界面及交互逻辑
+```
