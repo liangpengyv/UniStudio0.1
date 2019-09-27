@@ -1,0 +1,27 @@
+﻿<Window x:Class="StudioClient.Views.NewProjectWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Title="新建空白项目" Height="350" Width="540">
+
+    <Grid>
+        <Frame HorizontalAlignment="Left" Height="276" VerticalAlignment="Top" Width="144" Background="#FFE8E8E8"/>
+        <Image HorizontalAlignment="Left" Height="100" Margin="24,24,0,0" VerticalAlignment="Top" Width="100" Source="/Resources/Images/UniStudioLogo.png"/>
+        <Frame HorizontalAlignment="Left" Height="45" Margin="0,276,0,0" VerticalAlignment="Top" Width="534" Background="#FFF1F1F1"/>
+        <Label Content="新项目" HorizontalAlignment="Left" Margin="161,10,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <Label Content="创建一个新的工作流项目" HorizontalAlignment="Left" Margin="161,45,0,0" VerticalAlignment="Top"/>
+        <Label Content="名称" HorizontalAlignment="Left" Margin="161,86,0,0" VerticalAlignment="Top"/>
+        <Label Content="位置" HorizontalAlignment="Left" Margin="161,116,0,0" VerticalAlignment="Top"/>
+        <Label Content="描述" HorizontalAlignment="Left" Margin="161,146,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="_projectName" TextChanged="On_ProjectName_TextChanged" Margin="200,88,0,0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Height="23" Width="316"/>
+        <TextBox x:Name="_location" IsEnabled="False" Margin="200,118,0,0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Height="23" Width="273"/>
+        <TextBox x:Name="_description" Margin="200,148,0,0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Height="23" Width="316"/>
+        <Ellipse x:Name="_inputStatus" HorizontalAlignment="Left" Margin="496,92,0,0" VerticalAlignment="Top" Height="15" Width="15"/>
+        <Button Click="On_Select_Click" Content="···" HorizontalAlignment="Left" Margin="478,118,0,0" VerticalAlignment="Top" Width="38" Height="23"/>
+        <Button x:Name="_create" Click="On_Create_Click" Content="创建" HorizontalAlignment="Left" Margin="440,284,0,0" VerticalAlignment="Top" Width="76"/>
+    </Grid>
+</Window>

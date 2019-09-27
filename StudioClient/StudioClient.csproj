@@ -1,0 +1,671 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{26A61CA1-E10D-4AFE-B17A-6BBFD4BE0A99}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>StudioClient</RootNamespace>
+    <AssemblyName>StudioClient</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\Images\UniStudioIcon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ActiproSoftware.BarCode.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.BarCode.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.Charts.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.Charts.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.DataGrid.Contrib.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.DataGrid.Contrib.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.Docking.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.Docking.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.Editors.Interop.DataGrid.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.Editors.Interop.DataGrid.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.Editors.Interop.Grids.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.Editors.Interop.Grids.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.Editors.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.Editors.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.Gauge.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.Gauge.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.Grids.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.Grids.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.MicroCharts.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.MicroCharts.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.Navigation.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.Navigation.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.Ribbon.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.Ribbon.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.Shared.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.Shared.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.Shell.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.Shell.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.SyntaxEditor.Addons.DotNet.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.SyntaxEditor.Addons.DotNet.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.SyntaxEditor.Addons.JavaScript.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.SyntaxEditor.Addons.JavaScript.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.SyntaxEditor.Addons.Python.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.SyntaxEditor.Addons.Python.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.SyntaxEditor.Addons.Xml.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.SyntaxEditor.Addons.Xml.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.SyntaxEditor.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.SyntaxEditor.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.Text.Addons.DotNet.Roslyn.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.Text.Addons.DotNet.Roslyn.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.Text.Addons.DotNet.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.Text.Addons.DotNet.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.Text.Addons.JavaScript.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.Text.Addons.JavaScript.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.Text.Addons.Python.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.Text.Addons.Python.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.Text.Addons.Xml.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.Text.Addons.Xml.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.Text.LanguageGeneration.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.Text.LanguageGeneration.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.Text.LLParser.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.Text.LLParser.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.Text.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.Text.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.Themes.Luna.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.Themes.Luna.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.Themes.Office.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.Themes.Office.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.Views.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.Views.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiproSoftware.Wizard.Wpf, Version=19.1.682.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Actipro Software\WPF-Controls\v19.1.0682\Assemblies\ActiproSoftware.Wizard.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Activities" />
+    <Reference Include="System.Activities.Core.Presentation" />
+    <Reference Include="System.Activities.Presentation" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="YamlDotNet, Version=6.0.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e, processorArchitecture=MSIL">
+      <HintPath>..\packages\YamlDotNet.6.1.2\lib\net45\YamlDotNet.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Common\CheckableTreeNodeModel.cs" />
+    <Compile Include="Common\CustomTrackingParticipant.cs" />
+    <Compile Include="Common\FolderTreeNodeModel.cs" />
+    <Compile Include="Common\ProjectConfigModel.cs" />
+    <Compile Include="Common\ThreeStateCheckableTreeNodeModel.cs" />
+    <Compile Include="Common\TreeNodeModel.cs" />
+    <Compile Include="ExpressionEditor\CustomCompletionListBox.cs" />
+    <Compile Include="ExpressionEditor\instance.cs" />
+    <Compile Include="ExpressionEditor\Language.cs" />
+    <Compile Include="ExpressionEditor\Service.cs" />
+    <Compile Include="Views\NewProjectWindow.xaml.cs">
+      <DependentUpon>NewProjectWindow.xaml</DependentUpon>
+    </Compile>
+    <None Include="packages.config" />
+    <None Include="Template\DefaultSequenceWorkflow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Template\DefaultSequenceWorkflowCSharp.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Page Include="ExpressionEditor\Resources.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\DefaultTreeListBoxItemAdapter.cs" />
+    <Compile Include="Common\DocumentReferenceGenerator.cs" />
+    <Compile Include="Common\TreeNodeModelTagData.cs" />
+    <Compile Include="Views\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <None Include="Template\DefaultFlowchartWorkflow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Template\DefaultFlowchartWorkflowCSharp.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Template\DefaultStateMachineWorkflow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Template\DefaultStateMachineWorkflowCSharp.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Page Include="Views\NewProjectWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\UniStudioIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\ActiproAppIcon.ico" />
+    <Resource Include="Resources\Images\ActiproIcon.ico" />
+    <Resource Include="Resources\Images\ActiproMetro24.png" />
+    <Resource Include="Resources\Images\ActiproMetroTransparent24.png" />
+    <Resource Include="Resources\Images\Add16.png" />
+    <Resource Include="Resources\Images\AlignTextCenter16.png" />
+    <Resource Include="Resources\Images\AlignTextJustify16.png" />
+    <Resource Include="Resources\Images\AlignTextLeft16.png" />
+    <Resource Include="Resources\Images\AlignTextRight16.png" />
+    <Resource Include="Resources\Images\ApplicationMenuScreenTip.png" />
+    <Resource Include="Resources\Images\ApplyStyles16.png" />
+    <Resource Include="Resources\Images\Back16.png" />
+    <Resource Include="Resources\Images\BackstageBackground.png" />
+    <Resource Include="Resources\Images\BlankPage16.png" />
+    <Resource Include="Resources\Images\BlankPage32.png" />
+    <Resource Include="Resources\Images\Bold16.png" />
+    <Resource Include="Resources\Images\Bookmark16.png" />
+    <Resource Include="Resources\Images\Bookmark32.png" />
+    <Resource Include="Resources\Images\BookmarkDisabled16.png" />
+    <Resource Include="Resources\Images\Breakpoint16.png" />
+    <Resource Include="Resources\Images\BreakpointToggleEnabled16.png" />
+    <Resource Include="Resources\Images\Bullets16.png" />
+    <Resource Include="Resources\Images\Calendar16.png" />
+    <Resource Include="Resources\Images\Calendar32.png" />
+    <Resource Include="Resources\Images\CallStack16.png" />
+    <Resource Include="Resources\Images\Categorize16.png" />
+    <Resource Include="Resources\Images\CD16.png" />
+    <Resource Include="Resources\Images\CDDrive16.png" />
+    <Resource Include="Resources\Images\Cellphone32.png" />
+    <Resource Include="Resources\Images\Certificate16.png" />
+    <Resource Include="Resources\Images\ChangeCase16.png" />
+    <Resource Include="Resources\Images\ChangeListLevel16.png" />
+    <Resource Include="Resources\Images\ChangeStyles32.png" />
+    <Resource Include="Resources\Images\Chart16.png" />
+    <Resource Include="Resources\Images\Chart32.png" />
+    <Resource Include="Resources\Images\CheckIssues32.png" />
+    <Resource Include="Resources\Images\ClassView16.png" />
+    <Resource Include="Resources\Images\ClearFormatting16.png" />
+    <Resource Include="Resources\Images\Close16.png" />
+    <Resource Include="Resources\Images\Close32.png" />
+    <Resource Include="Resources\Images\CloseButton16.png" />
+    <Resource Include="Resources\Images\CloseButtonAero16.png" />
+    <Resource Include="Resources\Images\CloseTab16.png" />
+    <Resource Include="Resources\Images\CloseTab32.png" />
+    <Resource Include="Resources\Images\ColorPicker32.png" />
+    <Resource Include="Resources\Images\CommentLines16.png" />
+    <Resource Include="Resources\Images\Computer16.png" />
+    <Resource Include="Resources\Images\Contacts16.png" />
+    <Resource Include="Resources\Images\Contacts32.png" />
+    <Resource Include="Resources\Images\ControlPanel16.png" />
+    <Resource Include="Resources\Images\Copy16.png" />
+    <Resource Include="Resources\Images\CopyToCD16.png" />
+    <Resource Include="Resources\Images\CoverPage16.png" />
+    <Resource Include="Resources\Images\CoverPage32.png" />
+    <Resource Include="Resources\Images\CoverPageScreenTip.png" />
+    <Resource Include="Resources\Images\CrossReference16.png" />
+    <Resource Include="Resources\Images\CrossReference32.png" />
+    <Resource Include="Resources\Images\CSharpDocument16.png" />
+    <Resource Include="Resources\Images\Cut16.png" />
+    <Resource Include="Resources\Images\DateTime16.png" />
+    <Resource Include="Resources\Images\DecreaseIndent16.png" />
+    <Resource Include="Resources\Images\Delete16.png" />
+    <Resource Include="Resources\Images\DeleteUnsavedDocuments32.png" />
+    <Resource Include="Resources\Images\Desktop16.png" />
+    <Resource Include="Resources\Images\DocumentOutline16.png" />
+    <Resource Include="Resources\Images\Documents16.png" />
+    <Resource Include="Resources\Images\DropCap16.png" />
+    <Resource Include="Resources\Images\DropCap32.png" />
+    <Resource Include="Resources\Images\Email32.png" />
+    <Resource Include="Resources\Images\EmptyDrive16.png" />
+    <Resource Include="Resources\Images\Envelope16.png" />
+    <Resource Include="Resources\Images\Equation16.png" />
+    <Resource Include="Resources\Images\Equation32.png" />
+    <Resource Include="Resources\Images\ErrorList16.png" />
+    <Resource Include="Resources\Images\ExcelDocument16.png" />
+    <Resource Include="Resources\Images\Exit16.png" />
+    <Resource Include="Resources\Images\Favorites16.png" />
+    <Resource Include="Resources\Images\FemaleSymbol16.png" />
+    <Resource Include="Resources\Images\FileMove16.png" />
+    <Resource Include="Resources\Images\FilePublish16.png" />
+    <Resource Include="Resources\Images\FileRename16.png" />
+    <Resource Include="Resources\Images\Find16.png" />
+    <Resource Include="Resources\Images\FindResults16.png" />
+    <Resource Include="Resources\Images\FindSymbolResults16.png" />
+    <Resource Include="Resources\Images\Flag16.png" />
+    <Resource Include="Resources\Images\FlowDirection32.png" />
+    <Resource Include="Resources\Images\Folder16.png" />
+    <Resource Include="Resources\Images\FolderClosed16.png" />
+    <Resource Include="Resources\Images\FolderGreen16.png" />
+    <Resource Include="Resources\Images\FolderList16.png" />
+    <Resource Include="Resources\Images\FolderList32.png" />
+    <Resource Include="Resources\Images\FolderOpen16.png" />
+    <Resource Include="Resources\Images\FolderOpenClassic16.png" />
+    <Resource Include="Resources\Images\FontColor16.png" />
+    <Resource Include="Resources\Images\Footer16.png" />
+    <Resource Include="Resources\Images\Footer32.png" />
+    <Resource Include="Resources\Images\FormatDocument16.png" />
+    <Resource Include="Resources\Images\FormatPainter16.png" />
+    <Resource Include="Resources\Images\FormatSelection16.png" />
+    <Resource Include="Resources\Images\GalleryBulletsNone.png" />
+    <Resource Include="Resources\Images\GalleryBulletsType1.png" />
+    <Resource Include="Resources\Images\GalleryBulletsType2.png" />
+    <Resource Include="Resources\Images\GalleryBulletsType3.png" />
+    <Resource Include="Resources\Images\GalleryBulletsType4.png" />
+    <Resource Include="Resources\Images\GalleryBulletsType5.png" />
+    <Resource Include="Resources\Images\GalleryBulletsType6.png" />
+    <Resource Include="Resources\Images\GalleryBulletsType7.png" />
+    <Resource Include="Resources\Images\GalleryStylesBookTitle.png" />
+    <Resource Include="Resources\Images\GalleryStylesEmphasis.png" />
+    <Resource Include="Resources\Images\GalleryStylesHeading1.png" />
+    <Resource Include="Resources\Images\GalleryStylesHeading2.png" />
+    <Resource Include="Resources\Images\GalleryStylesIntenseEmphasis.png" />
+    <Resource Include="Resources\Images\GalleryStylesIntenseQuote.png" />
+    <Resource Include="Resources\Images\GalleryStylesIntenseReference.png" />
+    <Resource Include="Resources\Images\GalleryStylesListParagraph.png" />
+    <Resource Include="Resources\Images\GalleryStylesNormal.png" />
+    <Resource Include="Resources\Images\GalleryStylesNoSpacing.png" />
+    <Resource Include="Resources\Images\GalleryStylesQuote.png" />
+    <Resource Include="Resources\Images\GalleryStylesStrong.png" />
+    <Resource Include="Resources\Images\GalleryStylesSubtitle.png" />
+    <Resource Include="Resources\Images\GalleryStylesSubtleEmphasis.png" />
+    <Resource Include="Resources\Images\GalleryStylesSubtleReference.png" />
+    <Resource Include="Resources\Images\GalleryStylesTitle.png" />
+    <Resource Include="Resources\Images\Gear48.png" />
+    <Resource Include="Resources\Images\Globe32.png" />
+    <Resource Include="Resources\Images\GrowFont16.png" />
+    <Resource Include="Resources\Images\Hand16.png" />
+    <Resource Include="Resources\Images\HardDrive16.png" />
+    <Resource Include="Resources\Images\Header16.png" />
+    <Resource Include="Resources\Images\Header32.png" />
+    <Resource Include="Resources\Images\Help16.png" />
+    <Resource Include="Resources\Images\History16.png" />
+    <Resource Include="Resources\Images\Home16.png" />
+    <Resource Include="Resources\Images\Home32.png" />
+    <Resource Include="Resources\Images\Hyperlink16.png" />
+    <Resource Include="Resources\Images\Hyperlink32.png" />
+    <Resource Include="Resources\Images\IncreaseIndent16.png" />
+    <Resource Include="Resources\Images\IntelliPromptAutoComplete16.png" />
+    <Resource Include="Resources\Images\IntelliPromptCodeSnippetSelection16.png" />
+    <Resource Include="Resources\Images\IntelliPromptCompletion16.png" />
+    <Resource Include="Resources\Images\IntelliPromptParameterInfo16.png" />
+    <Resource Include="Resources\Images\IntelliPromptQuickInfo16.png" />
+    <Resource Include="Resources\Images\Italic16.png" />
+    <Resource Include="Resources\Images\Journal16.png" />
+    <Resource Include="Resources\Images\Journal32.png" />
+    <Resource Include="Resources\Images\LineSpacing16.png" />
+    <Resource Include="Resources\Images\Locals16.png" />
+    <Resource Include="Resources\Images\Lock16.png" />
+    <Resource Include="Resources\Images\MacroRecordingCancel16.png" />
+    <Resource Include="Resources\Images\MacroRecordingPause16.png" />
+    <Resource Include="Resources\Images\MacroRecordingRecord16.png" />
+    <Resource Include="Resources\Images\MacroRecordingRun16.png" />
+    <Resource Include="Resources\Images\MacroRecordingStop16.png" />
+    <Resource Include="Resources\Images\Mail16.png" />
+    <Resource Include="Resources\Images\Mail32.png" />
+    <Resource Include="Resources\Images\MaleSymbol16.png" />
+    <Resource Include="Resources\Images\Man48.png" />
+    <Resource Include="Resources\Images\ManageVersions32.png" />
+    <Resource Include="Resources\Images\Maximize16.png" />
+    <Resource Include="Resources\Images\MaximizeAero16.png" />
+    <Resource Include="Resources\Images\Minimize16.png" />
+    <Resource Include="Resources\Images\MinimizeAero16.png" />
+    <Resource Include="Resources\Images\MoveFirst16.png" />
+    <Resource Include="Resources\Images\MoveLast16.png" />
+    <Resource Include="Resources\Images\MoveNext16.png" />
+    <Resource Include="Resources\Images\MovePrevious16.png" />
+    <Resource Include="Resources\Images\MultilevelList16.png" />
+    <Resource Include="Resources\Images\Music16.png" />
+    <Resource Include="Resources\Images\MyComputer16.png" />
+    <Resource Include="Resources\Images\Network16.png" />
+    <Resource Include="Resources\Images\NetworkInternet16.png" />
+    <Resource Include="Resources\Images\NetworkPlaces16.png" />
+    <Resource Include="Resources\Images\New16.png" />
+    <Resource Include="Resources\Images\New32.png" />
+    <Resource Include="Resources\Images\Next16.png" />
+    <Resource Include="Resources\Images\Notes16.png" />
+    <Resource Include="Resources\Images\Notes32.png" />
+    <Resource Include="Resources\Images\Numbering16.png" />
+    <Resource Include="Resources\Images\Object16.png" />
+    <Resource Include="Resources\Images\OnlinePictures32.png" />
+    <Resource Include="Resources\Images\Open16.png" />
+    <Resource Include="Resources\Images\Open32.png" />
+    <Resource Include="Resources\Images\Options16.png" />
+    <Resource Include="Resources\Images\Outlook16.png" />
+    <Resource Include="Resources\Images\Output16.png" />
+    <Resource Include="Resources\Images\OutsideBorders16.png" />
+    <Resource Include="Resources\Images\PageBreak16.png" />
+    <Resource Include="Resources\Images\PageBreak32.png" />
+    <Resource Include="Resources\Images\PageNumber16.png" />
+    <Resource Include="Resources\Images\PageNumber32.png" />
+    <Resource Include="Resources\Images\ParagraphCenter16.png" />
+    <Resource Include="Resources\Images\Paste16.png" />
+    <Resource Include="Resources\Images\Paste32.png" />
+    <Resource Include="Resources\Images\PasteHyperlink16.png" />
+    <Resource Include="Resources\Images\PasteSpecial16.png" />
+    <Resource Include="Resources\Images\Pause32.png" />
+    <Resource Include="Resources\Images\Pencil16.png" />
+    <Resource Include="Resources\Images\Personalization16.png" />
+    <Resource Include="Resources\Images\Phone16.png" />
+    <Resource Include="Resources\Images\Picture16.png" />
+    <Resource Include="Resources\Images\Picture32.png" />
+    <Resource Include="Resources\Images\PicturePrint16.png" />
+    <Resource Include="Resources\Images\PictureTasks32.png" />
+    <Resource Include="Resources\Images\PictureTasksMono48.png" />
+    <Resource Include="Resources\Images\Play16.png" />
+    <Resource Include="Resources\Images\Play32.png" />
+    <Resource Include="Resources\Images\Print16.png" />
+    <Resource Include="Resources\Images\Print32.png" />
+    <Resource Include="Resources\Images\PrintPreview16.png" />
+    <Resource Include="Resources\Images\PrintsOnline16.png" />
+    <Resource Include="Resources\Images\ProjectCSharp16.png" />
+    <Resource Include="Resources\Images\Properties16.png" />
+    <Resource Include="Resources\Images\ProtectDocument32.png" />
+    <Resource Include="Resources\Images\PublishPost32.png" />
+    <Resource Include="Resources\Images\PushPin16.png" />
+    <Resource Include="Resources\Images\QuickAccessToolBar32.png" />
+    <Resource Include="Resources\Images\QuickParts16.png" />
+    <Resource Include="Resources\Images\QuickParts32.png" />
+    <Resource Include="Resources\Images\QuickStart16.png" />
+    <Resource Include="Resources\Images\QuickStart32.png" />
+    <Resource Include="Resources\Images\QuickStyles32.png" />
+    <Resource Include="Resources\Images\RecoverUnsavedDocuments32.png" />
+    <Resource Include="Resources\Images\RecycleBin16.png" />
+    <Resource Include="Resources\Images\Redo16.png" />
+    <Resource Include="Resources\Images\Reference16.png" />
+    <Resource Include="Resources\Images\Refresh16.png" />
+    <Resource Include="Resources\Images\Replace16.png" />
+    <Resource Include="Resources\Images\Restore16.png" />
+    <Resource Include="Resources\Images\RestoreAero16.png" />
+    <Resource Include="Resources\Images\RichTextDocument16.png" />
+    <Resource Include="Resources\Images\RichTextDocument32.png" />
+    <Resource Include="Resources\Images\Save16.png" />
+    <Resource Include="Resources\Images\Save32.png" />
+    <Resource Include="Resources\Images\Save8.png" />
+    <Resource Include="Resources\Images\SaveAs16.png" />
+    <Resource Include="Resources\Images\SaveAs32.png" />
+    <Resource Include="Resources\Images\ScenicLayout32.png" />
+    <Resource Include="Resources\Images\Select16.png" />
+    <Resource Include="Resources\Images\Settings16.png" />
+    <Resource Include="Resources\Images\Shading16.png" />
+    <Resource Include="Resources\Images\Shapes16.png" />
+    <Resource Include="Resources\Images\Shapes32.png" />
+    <Resource Include="Resources\Images\Shortcuts16.png" />
+    <Resource Include="Resources\Images\Shortcuts32.png" />
+    <Resource Include="Resources\Images\ShrinkFont16.png" />
+    <Resource Include="Resources\Images\SignatureLine16.png" />
+    <Resource Include="Resources\Images\SlideShow16.png" />
+    <Resource Include="Resources\Images\SmartArt16.png" />
+    <Resource Include="Resources\Images\SmartArt32.png" />
+    <Resource Include="Resources\Images\Smile10.png" />
+    <Resource Include="Resources\Images\Solution16.png" />
+    <Resource Include="Resources\Images\SolutionExplorer16.png" />
+    <Resource Include="Resources\Images\Sort16.png" />
+    <Resource Include="Resources\Images\Start16.png" />
+    <Resource Include="Resources\Images\Stop16.png" />
+    <Resource Include="Resources\Images\Stop32.png" />
+    <Resource Include="Resources\Images\Strikethrough16.png" />
+    <Resource Include="Resources\Images\StylesGroup16.png" />
+    <Resource Include="Resources\Images\Subscript16.png" />
+    <Resource Include="Resources\Images\Superscript16.png" />
+    <Resource Include="Resources\Images\Symbol16.png" />
+    <Resource Include="Resources\Images\Symbol32.png" />
+    <Resource Include="Resources\Images\Table32.png" />
+    <Resource Include="Resources\Images\TaskList16.png" />
+    <Resource Include="Resources\Images\Tasks16.png" />
+    <Resource Include="Resources\Images\Tasks32.png" />
+    <Resource Include="Resources\Images\TextBox32.png" />
+    <Resource Include="Resources\Images\TextDocument16.png" />
+    <Resource Include="Resources\Images\TextDocument32.png" />
+    <Resource Include="Resources\Images\TextHighlightColor16.png" />
+    <Resource Include="Resources\Images\ThemeBlack16.png" />
+    <Resource Include="Resources\Images\ThemeBlack32.png" />
+    <Resource Include="Resources\Images\ThemeBlue16.png" />
+    <Resource Include="Resources\Images\ThemeBlue32.png" />
+    <Resource Include="Resources\Images\ThemeDarkRed16.png" />
+    <Resource Include="Resources\Images\ThemeGoldenrod16.png" />
+    <Resource Include="Resources\Images\ThemeGreen16.png" />
+    <Resource Include="Resources\Images\ThemePurple16.png" />
+    <Resource Include="Resources\Images\ThemeSilver16.png" />
+    <Resource Include="Resources\Images\ThemeSilver32.png" />
+    <Resource Include="Resources\Images\ThemeSteelBlue16.png" />
+    <Resource Include="Resources\Images\ThemeSystem16.png" />
+    <Resource Include="Resources\Images\ThemeSystem32.png" />
+    <Resource Include="Resources\Images\ThemeTan16.png" />
+    <Resource Include="Resources\Images\ToggleSymbols16.png" />
+    <Resource Include="Resources\Images\Toolbox16.png" />
+    <Resource Include="Resources\Images\UACShield16.png" />
+    <Resource Include="Resources\Images\UncommentLines16.png" />
+    <Resource Include="Resources\Images\Underline16.png" />
+    <Resource Include="Resources\Images\Undo16.png" />
+    <Resource Include="Resources\Images\User16.png" />
+    <Resource Include="Resources\Images\Users16.png" />
+    <Resource Include="Resources\Images\Users32.png" />
+    <Resource Include="Resources\Images\ViewFullScreenReading16.png" />
+    <Resource Include="Resources\Images\ViewPrintLayout12.png" />
+    <Resource Include="Resources\Images\ViewPrintLayout16.png" />
+    <Resource Include="Resources\Images\ViewWebLayout16.png" />
+    <Resource Include="Resources\Images\VistaExplorerEmail16.png" />
+    <Resource Include="Resources\Images\VistaExplorerExplore16.png" />
+    <Resource Include="Resources\Images\VistaExplorerOrganize16.png" />
+    <Resource Include="Resources\Images\VistaExplorerSlideShow16.png" />
+    <Resource Include="Resources\Images\VistaExplorerViews16.png" />
+    <Resource Include="Resources\Images\VSObjectAssembly16.png" />
+    <Resource Include="Resources\Images\VSObjectClass16.png" />
+    <Resource Include="Resources\Images\VSObjectClassSealed16.png" />
+    <Resource Include="Resources\Images\VSObjectDelegate16.png" />
+    <Resource Include="Resources\Images\VSObjectDelegateSealed16.png" />
+    <Resource Include="Resources\Images\VSObjectEnum16.png" />
+    <Resource Include="Resources\Images\VSObjectEnumSealed16.png" />
+    <Resource Include="Resources\Images\VSObjectEvent16.png" />
+    <Resource Include="Resources\Images\VSObjectField16.png" />
+    <Resource Include="Resources\Images\VSObjectFieldPrivate16.png" />
+    <Resource Include="Resources\Images\VSObjectFieldProtected16.png" />
+    <Resource Include="Resources\Images\VSObjectFieldSealed16.png" />
+    <Resource Include="Resources\Images\VSObjectInterface16.png" />
+    <Resource Include="Resources\Images\VSObjectInterfaceSealed16.png" />
+    <Resource Include="Resources\Images\VSObjectMethod16.png" />
+    <Resource Include="Resources\Images\VSObjectMethodPrivate16.png" />
+    <Resource Include="Resources\Images\VSObjectMethodProtected16.png" />
+    <Resource Include="Resources\Images\VSObjectMethodSealed16.png" />
+    <Resource Include="Resources\Images\VSObjectModule16.png" />
+    <Resource Include="Resources\Images\VSObjectNamespace16.png" />
+    <Resource Include="Resources\Images\VSObjectProperty16.png" />
+    <Resource Include="Resources\Images\VSObjectPropertyPrivate16.png" />
+    <Resource Include="Resources\Images\VSObjectPropertyProtected16.png" />
+    <Resource Include="Resources\Images\VSObjectPropertySealed16.png" />
+    <Resource Include="Resources\Images\VSObjectStructure16.png" />
+    <Resource Include="Resources\Images\VSObjectStructureSealed16.png" />
+    <Resource Include="Resources\Images\Warning16.png" />
+    <Resource Include="Resources\Images\Woman48.png" />
+    <Resource Include="Resources\Images\WordArt16.png" />
+    <Resource Include="Resources\Images\WordArt32.png" />
+    <Resource Include="Resources\Images\WordDocument16.png" />
+    <Resource Include="Resources\Images\Wrench16.png" />
+    <Resource Include="Resources\Images\XmlSchema16.png" />
+    <Resource Include="Resources\Images\ZoomDrag16.png" />
+    <Resource Include="Resources\Images\ZoomIn16.png" />
+    <Resource Include="Resources\Images\ZoomOut16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\UniStudioLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 和 x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CustomActivities\CustomActivities.csproj">
+      <Project>{51cc5f07-ae8d-407e-9825-b865422b3fa5}</Project>
+      <Name>CustomActivities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
