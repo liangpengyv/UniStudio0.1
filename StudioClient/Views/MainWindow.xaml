@@ -6,10 +6,19 @@
         xmlns:ribbon="http://schemas.actiprosoftware.com/winfx/xaml/ribbon"
         xmlns:grids="http://schemas.actiprosoftware.com/winfx/xaml/grids"
         xmlns:common="clr-namespace:StudioClient.Common"
+        xmlns:sapt="clr-namespace:System.Activities.Presentation.Toolbox;assembly=System.Activities.Presentation"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         Icon="/Resources/Images/UniStudioIcon.ico"
         WindowStartupLocation="CenterScreen"
         ApplicationName="Uni Studio"
         Height="720" Width="1280">
+
+    <Window.Resources>
+        <sys:String x:Key="AssemblyName">System.Activities, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</sys:String>
+        <Style x:Key="ActivitiyCategoryItemStyle">
+            <Setter Property="Control.Background" Value="White"/>
+        </Style>
+    </Window.Resources>
 
     <DockPanel>
         <!-- Ribbon Control -->
@@ -211,7 +220,7 @@
                     <docking:ToolWindowContainer>
                         <docking:ToolWindow Title="项目" CanClose="False" CanBecomeDocument="False">
                             <Grid>
-                                <grids:TreeListBox x:Name="_projectNodeList" Width="300" ItemSelecting="On_Project_List_Item_Selecting" IsRootItemVisible="True" TopLevelIndent="2" HorizontalAlignment="Left">
+                                <grids:TreeListBox x:Name="_projectNodeList" Width="Auto" BorderThickness="0" ItemSelecting="On_Project_List_Item_Selecting" IsRootItemVisible="True" TopLevelIndent="2" HorizontalAlignment="Left">
                                     <grids:TreeListBox.ItemAdapter>
                                         <common:DefaultTreeListBoxItemAdapter TopLevelExpandabilityDefault="Never" />
                                     </grids:TreeListBox.ItemAdapter>
@@ -226,7 +235,42 @@
                                 </grids:TreeListBox>
                             </Grid>
                         </docking:ToolWindow>
-                        <docking:ToolWindow x:Name="_activities" Title="活动" CanClose="False" CanBecomeDocument="False"/>
+                        <docking:ToolWindow x:Name="_activities" Title="活动" CanClose="False" CanBecomeDocument="False">
+                            <sapt:ToolboxControl BorderThickness="0" CategoryItemStyle="{StaticResource ActivitiyCategoryItemStyle}" FocusVisualStyle="{StaticResource ActivitiyCategoryItemStyle}">
+                                <sapt:ToolboxCategory CategoryName="Debug">
+                                    <sapt:ToolboxItemWrapper AssemblyName="{StaticResource ResourceKey=AssemblyName}" ToolName="System.Activities.Statements.WriteLine"/>
+                                </sapt:ToolboxCategory>
+                                <sapt:ToolboxCategory CategoryName="Execute">
+                                    <sapt:ToolboxItemWrapper AssemblyName="{StaticResource ResourceKey=AssemblyName}" ToolName="System.Activities.Statements.InvokeMethod"/>
+                                </sapt:ToolboxCategory>
+                                <sapt:ToolboxCategory CategoryName="Flowchart">
+                                    <sapt:ToolboxItemWrapper AssemblyName="{StaticResource ResourceKey=AssemblyName}" ToolName="System.Activities.Statements.FlowDecision"/>
+                                    <sapt:ToolboxItemWrapper AssemblyName="{StaticResource ResourceKey=AssemblyName}" ToolName="System.Activities.Statements.Flowchart"/>
+                                </sapt:ToolboxCategory>
+                                <sapt:ToolboxCategory CategoryName="State Machine">
+                                    <sapt:ToolboxItemWrapper AssemblyName="{StaticResource ResourceKey=AssemblyName}" ToolName="System.Activities.Statements.State"/>
+                                    <sapt:ToolboxItemWrapper AssemblyName="{StaticResource ResourceKey=AssemblyName}" ToolName="System.Activities.Statements.StateMachine"/>
+                                </sapt:ToolboxCategory>
+                                <sapt:ToolboxCategory CategoryName="Error Handing">
+                                    <sapt:ToolboxItemWrapper AssemblyName="{StaticResource ResourceKey=AssemblyName}" ToolName="System.Activities.Statements.Rethrow"/>
+                                    <sapt:ToolboxItemWrapper AssemblyName="{StaticResource ResourceKey=AssemblyName}" ToolName="System.Activities.Statements.TerminateWorkflow"/>
+                                    <sapt:ToolboxItemWrapper AssemblyName="{StaticResource ResourceKey=AssemblyName}" ToolName="System.Activities.Statements.Throw"/>
+                                    <sapt:ToolboxItemWrapper AssemblyName="{StaticResource ResourceKey=AssemblyName}" ToolName="System.Activities.Statements.TryCatch"/>
+                                </sapt:ToolboxCategory>
+                                <sapt:ToolboxCategory CategoryName="Control">
+                                    <sapt:ToolboxItemWrapper AssemblyName="{StaticResource ResourceKey=AssemblyName}" ToolName="System.Activities.Statements.Assign"/>
+                                    <sapt:ToolboxItemWrapper AssemblyName="{StaticResource ResourceKey=AssemblyName}" ToolName="System.Activities.Statements.CancellationScope"/>
+                                    <sapt:ToolboxItemWrapper AssemblyName="{StaticResource ResourceKey=AssemblyName}" ToolName="System.Activities.Statements.Delay"/>
+                                    <sapt:ToolboxItemWrapper AssemblyName="{StaticResource ResourceKey=AssemblyName}" ToolName="System.Activities.Statements.DoWhile"/>
+                                    <sapt:ToolboxItemWrapper AssemblyName="{StaticResource ResourceKey=AssemblyName}" ToolName="System.Activities.Statements.If"/>
+                                    <sapt:ToolboxItemWrapper AssemblyName="{StaticResource ResourceKey=AssemblyName}" ToolName="System.Activities.Statements.Parallel"/>
+                                    <sapt:ToolboxItemWrapper AssemblyName="{StaticResource ResourceKey=AssemblyName}" ToolName="System.Activities.Statements.Pick"/>
+                                    <sapt:ToolboxItemWrapper AssemblyName="{StaticResource ResourceKey=AssemblyName}" ToolName="System.Activities.Statements.PickBranch"/>
+                                    <sapt:ToolboxItemWrapper AssemblyName="{StaticResource ResourceKey=AssemblyName}" ToolName="System.Activities.Statements.Sequence"/>
+                                    <sapt:ToolboxItemWrapper AssemblyName="{StaticResource ResourceKey=AssemblyName}" ToolName="System.Activities.Statements.While"/>
+                                </sapt:ToolboxCategory>
+                            </sapt:ToolboxControl>
+                        </docking:ToolWindow>
                     </docking:ToolWindowContainer>
                     <!-- designer -->
                     <docking:Workspace>
