@@ -12,8 +12,6 @@ namespace StudioClient.Views
     /// </summary>
     public partial class NewProjectWindow : Window
     {
-        public MainWindow mainWindow { get; set; }
-
         public NewProjectWindow()
         {
             InitializeComponent();
@@ -91,7 +89,7 @@ namespace StudioClient.Views
         private void On_Create_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
-            mainWindow.HandleNewProject(_projectName.Text, _location.Text, _description.Text);
+            (this.Owner as MainWindow).HandleNewProject(_projectName.Text, _location.Text, _description.Text);
         }
 
         /// <summary>

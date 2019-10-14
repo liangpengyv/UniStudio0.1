@@ -1,0 +1,3 @@
+PackageSources:
+  Local: C:\Program Files (x86)\UiPath\Studio\Packages
+  Official: https://www.myget.org/F/workflow/

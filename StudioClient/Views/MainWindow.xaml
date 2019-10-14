@@ -176,19 +176,17 @@
                                 <ribbon:Button Label="保存所有" Click="On_Save_All_Workflow_Click" ImageSourceSmall="/Resources/Images/Save16.png"/>
                             </ribbon:Menu>
                         </ribbon:SplitButton>
-                        <ribbon:Button Label="运行" Click="On_Run_Workflow_Click" ImageSourceSmall="/Resources/Images/Start16.png"/>
+                        <ribbon:Button Label="运行" Click="On_Run_Workflow_Click" ImageSourceLarge="/Resources/Images/Start16.png"/>
                     </ribbon:Group>
                     <ribbon:Group Label="编辑">
                         <ribbon:StackPanel ItemVariantBehavior="AlwaysMedium">
                             <ribbon:Button Label="剪切" Command="ApplicationCommands.Cut" ImageSourceSmall="/Resources/Images/Cut16.png"/>
-                            <ribbon:Button Label="复制" Command="ApplicationCommands.Cut" ImageSourceSmall="/Resources/Images/Copy16.png"/>
-                            <ribbon:Button Label="粘贴" Command="ApplicationCommands.Cut" ImageSourceSmall="/Resources/Images/Paste16.png"/>
+                            <ribbon:Button Label="复制" Command="ApplicationCommands.Copy" ImageSourceSmall="/Resources/Images/Copy16.png"/>
+                            <ribbon:Button Label="粘贴" Command="ApplicationCommands.Paste" ImageSourceSmall="/Resources/Images/Paste16.png"/>
                         </ribbon:StackPanel>
                     </ribbon:Group>
                     <ribbon:Group Label="依赖">
-                        <ribbon:StackPanel ItemVariantBehavior="AlwaysMedium">
-                            <TextBlock>占坑ing……</TextBlock>
-                        </ribbon:StackPanel>
+                        <ribbon:Button Label="管理&#x0020;软件包" Click="On_Manage_Packages_Click" ImageSourceLarge="/Resources/Images/Packages.png"/>
                     </ribbon:Group>
                 </ribbon:Tab>
                 <ribbon:Tab Label="执行">
@@ -236,7 +234,9 @@
                             </Grid>
                         </docking:ToolWindow>
                         <docking:ToolWindow x:Name="_activities" Title="活动" CanClose="False" CanBecomeDocument="False">
-                            <sapt:ToolboxControl BorderThickness="0" CategoryItemStyle="{StaticResource ActivitiyCategoryItemStyle}" FocusVisualStyle="{StaticResource ActivitiyCategoryItemStyle}">
+                            <!-- TODO Activities 分类样式和搜索逻辑 -->
+                            <!--<sapt:ToolboxControl BorderThickness="0" CategoryItemStyle="{StaticResource ActivitiyCategoryItemStyle}">-->
+                            <sapt:ToolboxControl>
                                 <sapt:ToolboxCategory CategoryName="Debug">
                                     <sapt:ToolboxItemWrapper AssemblyName="{StaticResource ResourceKey=AssemblyName}" ToolName="System.Activities.Statements.WriteLine"/>
                                 </sapt:ToolboxCategory>

@@ -2,9 +2,7 @@
 using System.IO;
 using System.Windows;
 using Microsoft.Win32;
-using System.Activities.Statements;
 using System.Activities.Presentation;
-using System.Activities.Presentation.Toolbox;
 using System.Activities.Presentation.View;
 using System.Activities.Core.Presentation;
 using ActiproSoftware.Windows;
@@ -33,6 +31,7 @@ namespace StudioClient.Views
     {
         private string projectPath;
         private TreeNodeModel projectRootNode;
+        public ProjectConfigModel projectConfig;
 
         public WorkflowDesigner WorkflowDesigner { get; set; }
         public IDesignerDebugView DebuggerService { get; set; }
@@ -55,6 +54,87 @@ namespace StudioClient.Views
             // 还没有打开具体的项目实例
             _appMenu.CanClose = false;  // 左上角“退回”按钮置为“不可用”
             _appMenuClose.IsEnabled = false;  // 左侧“关闭项目”按钮置为“不可用”
+
+            #region Temp 放在这里用于自动打开 BlankProject 测试项目，便于测试（发布版本时请删除）
+            // TODO Temp 放在这里用于自动打开 BlankProject 测试项目，便于测试（发布版本时请删除）
+            string projectFileName = @"C:\Users\lpy\Documents\UniStudio\BlankProject\project.yml";
+
+            StreamReader yamlReader = File.OpenText(projectFileName);
+            Deserializer yamlDeserializer = new Deserializer();
+            projectConfig = yamlDeserializer.Deserialize<ProjectConfigModel>(yamlReader);
+            yamlReader.Close();
+
+            // 先关闭当前打开的项目
+            HandleCloseProject();
+
+            // 获取当前项目文件夹
+            projectPath = projectFileName.Substring(0, projectFileName.Length - 12);
+
+            // 从项目目录加载所有工作流，同时预先绑定并初始化左侧项目视图的工作流节点对象
+            List<TreeNodeModel> xamlNodeList = new List<TreeNodeModel>();
+            DocumentWindow mainDocumentWindow = null;
+            foreach (var xamlFile in new DirectoryInfo(projectPath).GetFiles("*.xaml"))
+            {
+                WorkflowDesigner designer = GetDesigner();
+                designer.Load(xamlFile.FullName);
+                var documentWindow = new DocumentWindow(_dockSite, xamlFile.FullName, xamlFile.Name, null, designer.View);
+                TreeNodeModel xamlNode = new TreeNodeModel
+                {
+                    ImageSource = new BitmapImage(new Uri("/Resources/Images/TextDocument16.png", UriKind.Relative)),
+                    Name = xamlFile.Name,
+                    Tag = new TreeNodeModelTagData(documentWindow, designer)
+                };
+                xamlNodeList.Add(xamlNode);
+
+                // 暂存“主流程”窗口对象，用于打开项目时候，默认打开的工作流窗口
+                if (xamlFile.Name.Equals("Main.xaml"))
+                {
+                    mainDocumentWindow = documentWindow;
+                }
+            }
+
+            // 加载左侧项目视图
+            TreeNodeModel dependenciesNode = new TreeNodeModel
+            {
+                ImageSource = new BitmapImage(new Uri("/Resources/Images/Reference16.png", UriKind.Relative)),
+                Name = "依赖",
+                IsExpanded = true
+            };
+            foreach (var item in projectConfig.Dependencies)
+            {
+                TreeNodeModel dependency = new TreeNodeModel
+                {
+                    ImageSource = new BitmapImage(new Uri("/Resources/Images/Reference16.png", UriKind.Relative)),
+                    Name = item.Key + " - " + item.Value
+                };
+                dependenciesNode.Children.Add(dependency);
+            }
+
+            projectRootNode = new TreeNodeModel
+            {
+                ImageSource = new BitmapImage(new Uri("/Resources/Images/SolutionExplorer16.png", UriKind.Relative)),
+                Name = projectConfig.Name,
+                IsExpanded = true
+            };
+            projectRootNode.Children.Add(dependenciesNode);
+            foreach (var xamlNode in xamlNodeList)
+            {
+                projectRootNode.Children.Add(xamlNode);
+            }
+            _projectNodeList.RootItem = projectRootNode;
+
+            // 添加“主流程”到文档窗口
+            mainDocumentWindow?.Activate();
+
+            // 更新 Activities 工具箱内容
+            UpdateActivitiesToolBoxContent();
+
+            // 已经有打开的具体项目实例，更新一些状态
+            _appMenu.CanClose = true;
+            _appMenuClose.IsEnabled = true;
+            _ribbon.IsApplicationMenuOpen = false;
+            ApplicationName += " - " + projectConfig.Name;
+            #endregion
         }
 
         /// <summary>
@@ -144,9 +224,9 @@ namespace StudioClient.Views
         /// <param name="e"></param>
         private void On_New_Project_Click(object sender, ExecuteRoutedEventArgs e)
         {
-            // 弹出一个编辑框
+            // 弹出新建项目窗口
             NewProjectWindow newProjectWindow = new NewProjectWindow();
-            newProjectWindow.mainWindow = this;
+            newProjectWindow.Owner = this;
             newProjectWindow.ShowDialog();
         }
 
@@ -167,7 +247,7 @@ namespace StudioClient.Views
 
             // 创建默认的工作流对象，并保存工作流文件到磁盘
             WorkflowDesigner designer = GetDesigner();
-            designer.Load("Template/DefaultSequenceWorkflow.xaml");
+            designer.Load("Resources/Template/DefaultSequenceWorkflow.xaml");
             string fileName = "Main.xaml";
             string filePath = Path.Combine(projectPath, fileName);
             designer.Save(filePath);
@@ -179,15 +259,21 @@ namespace StudioClient.Views
             dependencies.Add("System", "2.3.2");  // 临时写几个假的
             dependencies.Add("System.Core", "3.2.5");
             dependencies.Add("PresentationCore", "4.2.0");
-            ProjectConfigModel projectConfig = new ProjectConfigModel(projectName, description, fileName, dependencies);
+            projectConfig = new ProjectConfigModel
+            {
+                Name = projectName,
+                Description = description,
+                Main = fileName,
+                Dependencies = dependencies
+            };
             yamlSerializer.Serialize(yamlWriter, projectConfig);
             yamlWriter.Close();
 
-            // 加载左侧项目视图
+            // 构建左侧项目视图
             TreeNodeModel dependenciesNode = new TreeNodeModel
             {
                 ImageSource = new BitmapImage(new Uri("/Resources/Images/Reference16.png", UriKind.Relative)),
-                Name = projectName,
+                Name = "依赖",
                 IsExpanded = true
             };
             foreach (var item in projectConfig.Dependencies)
@@ -215,6 +301,8 @@ namespace StudioClient.Views
             };
             projectRootNode.Children.Add(dependenciesNode);
             projectRootNode.Children.Add(mainNode);
+
+            // 加载左侧项目视图
             _projectNodeList.RootItem = projectRootNode;
 
             // 添加到文档窗口
@@ -250,7 +338,7 @@ namespace StudioClient.Views
             {
                 StreamReader yamlReader = File.OpenText(dialog.FileName);
                 Deserializer yamlDeserializer = new Deserializer();
-                ProjectConfigModel projectConfig = yamlDeserializer.Deserialize<ProjectConfigModel>(yamlReader);
+                projectConfig = yamlDeserializer.Deserialize<ProjectConfigModel>(yamlReader);
                 yamlReader.Close();
 
                 // 先关闭当前打开的项目
@@ -286,7 +374,7 @@ namespace StudioClient.Views
                 TreeNodeModel dependenciesNode = new TreeNodeModel
                 {
                     ImageSource = new BitmapImage(new Uri("/Resources/Images/Reference16.png", UriKind.Relative)),
-                    Name = projectConfig.Name,
+                    Name = "依赖",
                     IsExpanded = true
                 };
                 foreach (var item in projectConfig.Dependencies)
@@ -381,16 +469,16 @@ namespace StudioClient.Views
             switch (workflowType)
             {
                 case "Sequence":
-                    templateFile = "Template/DefaultSequenceWorkflow.xaml";
+                    templateFile = "Resources/Template/DefaultSequenceWorkflow.xaml";
                     break;
                 case "Flowchart":
-                    templateFile = "Template/DefaultFlowchartWorkflow.xaml";
+                    templateFile = "Resources/Template/DefaultFlowchartWorkflow.xaml";
                     break;
                 case "State Machine":
-                    templateFile = "Template/DefaultStateMachineWorkflow.xaml";
+                    templateFile = "Resources/Template/DefaultStateMachineWorkflow.xaml";
                     break;
                 default:
-                    templateFile = "Template/DefaultSequenceWorkflow.xaml";
+                    templateFile = "Resources/Template/DefaultSequenceWorkflow.xaml";
                     break;
             }
 
@@ -585,7 +673,6 @@ namespace StudioClient.Views
                 }
             }
         }
-
         #region 工作流运行帮助方法
         private Dictionary<object, SourceLocation> UpdateSourceLocationMappingInDebuggerService()
         {
@@ -683,6 +770,19 @@ namespace StudioClient.Views
         #endregion
 
         /// <summary>
+        /// 点击“管理包”时发生
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void On_Manage_Packages_Click(object sender, ExecuteRoutedEventArgs e)
+        {
+            // 弹出管理包窗口
+            ManagePackagesWindow managePackagesWindow = new ManagePackagesWindow();
+            managePackagesWindow.Owner = this;
+            managePackagesWindow.ShowDialog();
+        }
+
+        /// <summary>
         /// 左侧项目树列表项目“选中”时候发生
         /// </summary>
         /// <param name="sender"></param>
@@ -773,6 +873,5 @@ namespace StudioClient.Views
                     break;
             }
         }
-
     }
 }

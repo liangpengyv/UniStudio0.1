@@ -211,8 +211,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Common\CheckableTreeNodeModel.cs" />
+    <Compile Include="Common\CmdExecuteResultModel.cs" />
     <Compile Include="Common\CustomTrackingParticipant.cs" />
     <Compile Include="Common\FolderTreeNodeModel.cs" />
+    <Compile Include="Common\NuGetDefaultConfigModel.cs" />
+    <Compile Include="Common\NuGetUserConfigModel.cs" />
     <Compile Include="Common\ProjectConfigModel.cs" />
     <Compile Include="Common\ThreeStateCheckableTreeNodeModel.cs" />
     <Compile Include="Common\TreeNodeModel.cs" />
@@ -220,15 +223,24 @@
     <Compile Include="ExpressionEditor\instance.cs" />
     <Compile Include="ExpressionEditor\Language.cs" />
     <Compile Include="ExpressionEditor\Service.cs" />
+    <Compile Include="Views\ManagePackagesWindow.xaml.cs">
+      <DependentUpon>ManagePackagesWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\NewProjectWindow.xaml.cs">
       <DependentUpon>NewProjectWindow.xaml</DependentUpon>
     </Compile>
+    <None Include="Config\NuGetUser.Config.yml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\NuGetDefault.Config.yml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
-    <None Include="Template\DefaultSequenceWorkflow.xaml">
+    <None Include="Resources\Template\DefaultSequenceWorkflow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Template\DefaultSequenceWorkflowCSharp.xaml">
+    <None Include="Resources\Template\DefaultSequenceWorkflowCSharp.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -252,26 +264,30 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <None Include="Template\DefaultFlowchartWorkflow.xaml">
+    <None Include="Resources\Template\DefaultFlowchartWorkflow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Template\DefaultFlowchartWorkflowCSharp.xaml">
+    <None Include="Resources\Template\DefaultFlowchartWorkflowCSharp.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Template\DefaultStateMachineWorkflow.xaml">
+    <None Include="Resources\Template\DefaultStateMachineWorkflow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Template\DefaultStateMachineWorkflowCSharp.xaml">
+    <None Include="Resources\Template\DefaultStateMachineWorkflowCSharp.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Include="Views\ManagePackagesWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\NewProjectWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -667,5 +683,14 @@
       <Name>CustomActivities</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Packages.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Toolset\nuget.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
