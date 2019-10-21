@@ -24,6 +24,8 @@ using System.Activities.Debugger;
 using System.Activities.Presentation.Services;
 using System.Activities.Presentation.Debug;
 using System.Windows.Threading;
+using System.Reflection;
+using System.Activities.Presentation.Toolbox;
 
 namespace StudioClient.Views
 {
@@ -165,43 +167,34 @@ namespace StudioClient.Views
         /// </summary>
         private void UpdateActivitiesToolBoxContent()
         {
-            // TODO 更新 Activities 工具箱
-            // 根据传入的项目配置文件，更新当前项目需要加载的 Activities 项目
-            // 注意默认需要加载的 Activities 的处理
+            // ↓↓↓ 下面部分为：--搞懂编程实现动态加载 DLL，并过滤 Activity 类资源 加载到 左侧工具栏-- 的示例程序 ↓↓↓
 
-            // Old
-            //// 创建工具箱控件
-            //ToolboxControl ctrl = new ToolboxControl();
+            // TODO 连接 当前项目的加载逻辑（nuget install -> overwrite project config -> load activities）
 
-            //// 创建分类
-            //ToolboxCategory control = new ToolboxCategory("Control");
-            //ToolboxCategory flowchart = new ToolboxCategory("Flowchart");
-            //ToolboxCategory stateMachine = new ToolboxCategory("State Machine");
+            //const string dllPath = @"C:\Users\lpy\.nuget\packages\1MyPackage\1.0.0\lib\CustomActivities.dll";
+            //Console.WriteLine(Directory.GetCurrentDirectory() + "-------------------------------");
+            //File.Copy(dllPath, Directory.GetCurrentDirectory() + @"\CustomActivities.dll", true);
+
+
+            //Assembly assembly = Assembly.LoadFile(dllPath);
+            //ToolboxControl ctrl = _activities.Content as ToolboxControl;
             //ToolboxCategory custom = new ToolboxCategory("Custom");
 
-            //// 为每个分类添加一些控件
-            //// Control
-            //control.Add(new ToolboxItemWrapper("System.Activities.Statements.Sequence", typeof(Sequence).Assembly.FullName, null, "Sequence"));
-            //control.Add(new ToolboxItemWrapper("System.Activities.Statements.Assign", typeof(Assign).Assembly.FullName, null, "Assign"));
-            //control.Add(new ToolboxItemWrapper("System.Activities.Statements.If", typeof(If).Assembly.FullName, null, "If"));
-            //control.Add(new ToolboxItemWrapper("System.Activities.Statements.DoWhile", typeof(DoWhile).Assembly.FullName, null, "DoWhile"));
-            //control.Add(new ToolboxItemWrapper("System.Activities.Statements.While", typeof(While).Assembly.FullName, null, "While"));
-            //control.Add(new ToolboxItemWrapper("System.Activities.Statements.WriteLine", typeof(WriteLine).Assembly.FullName, null, "WriteLine"));
-            //// Flowchart
-            //flowchart.Add(new ToolboxItemWrapper("System.Activities.Statements.Flowchart", typeof(Flowchart).Assembly.FullName, null, "Flowchart"));
-            //flowchart.Add(new ToolboxItemWrapper("System.Activities.Statements.FlowDecision", typeof(FlowDecision).Assembly.FullName, null, "Flow Decision"));
-            //// State Machine
-            //stateMachine.Add(new ToolboxItemWrapper("System.Activities.Statements.StateMachine", typeof(StateMachine).Assembly.FullName, null, "State Machine"));
-            //stateMachine.Add(new ToolboxItemWrapper("System.Activities.Statements.State", typeof(System.Activities.Statements.State).Assembly.FullName, null, "State"));
-            //// Custom
-            //custom.Add(new ToolboxItemWrapper("CustomActivities.SendMail.SendMail", typeof(CustomActivities.SendMail.SendMail).Assembly.FullName, null, "SendMail(temp test)"));
+            //Console.WriteLine("--------------------------\n");
 
-            //// 把每个分类添加到工具箱
-            //ctrl.Categories.Add(control);
-            //ctrl.Categories.Add(flowchart);
-            //ctrl.Categories.Add(stateMachine);
+            //foreach (var typeItem in assembly.GetTypes())
+            //{
+            //    if (typeItem.BaseType == typeof(AsyncCodeActivity))
+            //    {
+            //        ToolboxItemWrapper toolboxItemWrapper = new ToolboxItemWrapper(typeItem.ToString(), assembly.FullName, null, "SendMail(temp test)");
+            //        custom.Add(toolboxItemWrapper);
+            //        Console.WriteLine(typeItem.ToString());
+            //        Console.WriteLine(assembly.FullName);
+            //    }
+            //}
+            //Console.WriteLine("--------------------------\n");
+
             //ctrl.Categories.Add(custom);
-            //_activities.Content = ctrl;
         }
 
         /// <summary>

@@ -678,12 +678,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CustomActivities\CustomActivities.csproj">
-      <Project>{51cc5f07-ae8d-407e-9825-b865422b3fa5}</Project>
-      <Name>CustomActivities</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Images\Packages.png" />
   </ItemGroup>
   <ItemGroup>
