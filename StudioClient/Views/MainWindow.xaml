@@ -5,7 +5,7 @@
         xmlns:shared="http://schemas.actiprosoftware.com/winfx/xaml/shared"
         xmlns:ribbon="http://schemas.actiprosoftware.com/winfx/xaml/ribbon"
         xmlns:grids="http://schemas.actiprosoftware.com/winfx/xaml/grids"
-        xmlns:common="clr-namespace:StudioClient.Common"
+        xmlns:utils="clr-namespace:StudioClient.Utils"
         xmlns:sapt="clr-namespace:System.Activities.Presentation.Toolbox;assembly=System.Activities.Presentation"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         Icon="/Resources/Images/UniStudioIcon.ico"
@@ -220,7 +220,7 @@
                             <Grid>
                                 <grids:TreeListBox x:Name="_projectNodeList" Width="Auto" BorderThickness="0" ItemSelecting="On_Project_List_Item_Selecting" IsRootItemVisible="True" TopLevelIndent="2" HorizontalAlignment="Left">
                                     <grids:TreeListBox.ItemAdapter>
-                                        <common:DefaultTreeListBoxItemAdapter TopLevelExpandabilityDefault="Never" />
+                                        <utils:DefaultTreeListBoxItemAdapter TopLevelExpandabilityDefault="Never" />
                                     </grids:TreeListBox.ItemAdapter>
                                     <grids:TreeListBox.ItemTemplate>
                                         <DataTemplate>

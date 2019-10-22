@@ -3,7 +3,7 @@ using System.Activities;
 using System.Activities.Tracking;
 using System.Collections.Generic;
 
-namespace StudioClient.Common
+namespace StudioClient.Utils
 {
     public class CustomTrackingParticipant : TrackingParticipant
     {

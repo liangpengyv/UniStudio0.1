@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace StudioClient.Common
+namespace StudioClient.Model
 {
     /// <summary>
-    /// NuGet 默认配置文件模型 - Config/NuGetDefault.Config.yml
+    /// NuGet 用户配置文件模型 - Config/NuGetUser.Config.yml
     /// </summary>
-    class NuGetDefaultConfigModel
+    class NuGetUserConfigModel
     {
         public Dictionary<string, string> PackageSources { get; set; }
     }

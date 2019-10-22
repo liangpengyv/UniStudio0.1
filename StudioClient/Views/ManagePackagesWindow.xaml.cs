@@ -1,11 +1,11 @@
-﻿using StudioClient.Common;
+﻿using StudioClient.Model;
+using StudioClient.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using YamlDotNet.Serialization;
 
 namespace StudioClient.Views
 {
@@ -14,6 +14,9 @@ namespace StudioClient.Views
     /// </summary>
     public partial class ManagePackagesWindow : Window
     {
+        const string nuGetDefaultConfigFilePath = "Config/NuGetDefault.Config.yml";
+        const string nuGetUserConfigFilePath = "Config/NuGetUser.Config.yml";
+
         public ManagePackagesWindow()
         {
             InitializeComponent();
@@ -37,22 +40,13 @@ namespace StudioClient.Views
         {
             _leftMenuPackageSources.Items.Clear();
 
-            StreamReader yamlReader;
-            Deserializer yamlDeserializer;
-
-            yamlReader = File.OpenText("config/NuGetDefault.Config.yml");
-            yamlDeserializer = new Deserializer();
-            NuGetDefaultConfigModel nuGetDefaultConfig = yamlDeserializer.Deserialize<NuGetDefaultConfigModel>(yamlReader);
-            yamlReader.Close();
+            NuGetDefaultConfigModel nuGetDefaultConfig = YamlFileIO.Reader<NuGetDefaultConfigModel>(nuGetDefaultConfigFilePath);
             foreach (var tempSource in nuGetDefaultConfig.PackageSources)
             {
                 _leftMenuPackageSources.Items.Add(new ListBoxItem { Content = "         " + tempSource.Key, Tag = tempSource });
             }
 
-            yamlReader = File.OpenText("Config/NuGetUser.Config.yml");
-            yamlDeserializer = new Deserializer();
-            NuGetUserConfigModel nuGetUserConfig = yamlDeserializer.Deserialize<NuGetUserConfigModel>(yamlReader);
-            yamlReader.Close();
+            NuGetUserConfigModel nuGetUserConfig = YamlFileIO.Reader<NuGetUserConfigModel>(nuGetUserConfigFilePath);
             foreach (var tempSource in nuGetUserConfig.PackageSources)
             {
                 _leftMenuPackageSources.Items.Add(new ListBoxItem { Content = "         " + tempSource.Key, Tag = tempSource });
@@ -67,8 +61,6 @@ namespace StudioClient.Views
         /// <param name="e"></param>
         private void On_Left_Menu_Options_Selection_Changed(object sender, SelectionChangedEventArgs e)
         {
-            StreamReader yamlReader;
-            Deserializer yamlDeserializer;
             NuGetDefaultConfigModel nuGetDefaultConfig;
             NuGetUserConfigModel nuGetUserConfig;
             string strCMD;
@@ -84,10 +76,7 @@ namespace StudioClient.Views
                     _leftMenuPackageSources.SelectedIndex = -1;
 
                     // 加载默认源列表
-                    yamlReader = File.OpenText("Config/NuGetDefault.Config.yml");
-                    yamlDeserializer = new Deserializer();
-                    nuGetDefaultConfig = yamlDeserializer.Deserialize<NuGetDefaultConfigModel>(yamlReader);
-                    yamlReader.Close();
+                    nuGetDefaultConfig = YamlFileIO.Reader<NuGetDefaultConfigModel>(nuGetDefaultConfigFilePath);
                     _defaultPackagesSource.Items.Clear();
                     foreach (var tempSource in nuGetDefaultConfig.PackageSources)
                     {
@@ -95,10 +84,7 @@ namespace StudioClient.Views
                     }
 
                     // 加载用户定义源列表
-                    yamlReader = File.OpenText("Config/NuGetUser.Config.yml");
-                    yamlDeserializer = new Deserializer();
-                    nuGetUserConfig = yamlDeserializer.Deserialize<NuGetUserConfigModel>(yamlReader);
-                    yamlReader.Close();
+                    nuGetUserConfig = YamlFileIO.Reader<NuGetUserConfigModel>(nuGetUserConfigFilePath);
                     _userPackagesSource.Items.Clear();
                     foreach (var tempSource in nuGetUserConfig.PackageSources)
                     {
@@ -134,13 +120,10 @@ namespace StudioClient.Views
                     _packageList.Items.Clear();
 
                     // 加载默认源
-                    yamlReader = File.OpenText("Config/NuGetDefault.Config.yml");
-                    yamlDeserializer = new Deserializer();
-                    nuGetDefaultConfig = yamlDeserializer.Deserialize<NuGetDefaultConfigModel>(yamlReader);
-                    yamlReader.Close();
+                    nuGetDefaultConfig = YamlFileIO.Reader<NuGetDefaultConfigModel>(nuGetDefaultConfigFilePath);
                     foreach (var tempSource in nuGetDefaultConfig.PackageSources)
                     {
-                        strCMD = @".\Resources\Toolset\nuget.exe" + " list -Source \"" + tempSource.Value + "\"";
+                        strCMD = @".\Resources\NuGet\nuget.exe" + " list -Source \"" + tempSource.Value + "\"";
                         executeResult = HandleExecuteCMD(strCMD);
 
                         if (executeResult.StateCode == 0)
@@ -168,13 +151,10 @@ namespace StudioClient.Views
                     }
 
                     // 加载用户定义源
-                    yamlReader = File.OpenText("Config/NuGetUser.Config.yml");
-                    yamlDeserializer = new Deserializer();
-                    nuGetUserConfig = yamlDeserializer.Deserialize<NuGetUserConfigModel>(yamlReader);
-                    yamlReader.Close();
+                    nuGetUserConfig = YamlFileIO.Reader<NuGetUserConfigModel>(nuGetUserConfigFilePath);
                     foreach (var tempSource in nuGetUserConfig.PackageSources)
                     {
-                        strCMD = @".\Resources\Toolset\nuget.exe" + " list -Source \"" + tempSource.Value + "\"";
+                        strCMD = @".\Resources\NuGet\nuget.exe" + " list -Source \"" + tempSource.Value + "\"";
                         executeResult = HandleExecuteCMD(strCMD);
 
                         if (executeResult.StateCode == 0)
@@ -209,7 +189,7 @@ namespace StudioClient.Views
                     _leftMenuOptions.SelectedIndex = -1;
 
                     KeyValuePair<string, string> packageSources = (KeyValuePair<string, string>)selectedItem.Tag;
-                    strCMD = @".\Resources\Toolset\nuget.exe" + " list -Source \"" + packageSources.Value + "\"";
+                    strCMD = @".\Resources\NuGet\nuget.exe" + " list -Source \"" + packageSources.Value + "\"";
                     executeResult = HandleExecuteCMD(strCMD);
 
                     if (executeResult.StateCode == 0)
@@ -253,26 +233,26 @@ namespace StudioClient.Views
         /// <returns></returns>
         private CmdExecuteResultModel HandleExecuteCMD(string strCMD)
         {
-            Process p = new Process();
-            p.StartInfo.FileName = "cmd.exe";
-            p.StartInfo.UseShellExecute = false;  // 是否使用操作系统shell启动
-            p.StartInfo.RedirectStandardInput = true;  // 接受来自调用程序的输入信息
-            p.StartInfo.RedirectStandardOutput = true;  // 由调用程序获取输出信息
-            p.StartInfo.RedirectStandardError = true;  // 重定向标准错误输出
-            p.StartInfo.CreateNoWindow = true;  // 不显示程序窗口
-            p.Start();  // 启动程序
+            Process cmdProcess = new Process();
+            cmdProcess.StartInfo.FileName = "cmd.exe";
+            cmdProcess.StartInfo.UseShellExecute = false;  // 是否使用操作系统shell启动
+            cmdProcess.StartInfo.RedirectStandardInput = true;  // 接受来自调用程序的输入信息
+            cmdProcess.StartInfo.RedirectStandardOutput = true;  // 由调用程序获取输出信息
+            cmdProcess.StartInfo.RedirectStandardError = true;  // 重定向标准错误输出
+            cmdProcess.StartInfo.CreateNoWindow = true;  // 不显示程序窗口
+            cmdProcess.Start();  // 启动程序
 
             //向cmd窗口发送输入信息
-            p.StandardInput.WriteLine(strCMD + " &exit");
+            cmdProcess.StandardInput.WriteLine(strCMD + " &exit");
 
-            p.StandardInput.AutoFlush = true;
+            cmdProcess.StandardInput.AutoFlush = true;
 
             //获取cmd窗口的输出信息
-            string error = p.StandardError.ReadToEnd();
-            string output = p.StandardOutput.ReadToEnd();
+            string error = cmdProcess.StandardError.ReadToEnd();
+            string output = cmdProcess.StandardOutput.ReadToEnd();
             //等待程序执行完退出进程
-            p.WaitForExit();
-            p.Close();
+            cmdProcess.WaitForExit();
+            cmdProcess.Close();
 
             if (error.Equals(""))
             {
@@ -347,31 +327,19 @@ namespace StudioClient.Views
         {
             if (HandleEditSourceInfoValidate() == false) return;
 
-            StreamReader yamlReader;
-            Deserializer yamlDeserializer;
             NuGetUserConfigModel nuGetUserConfig;
-            StreamWriter yamlWriter;
-            Serializer yamlSerializer;
             switch (_addOrUpdateUserPackageInfoButton.Content)
             {
                 case "添加":
                     // 数据持久化
-                    yamlReader = File.OpenText("Config/NuGetUser.Config.yml");
-                    yamlDeserializer = new Deserializer();
-                    nuGetUserConfig = yamlDeserializer.Deserialize<NuGetUserConfigModel>(yamlReader);
-                    yamlReader.Close();
-
+                    nuGetUserConfig = YamlFileIO.Reader<NuGetUserConfigModel>(nuGetUserConfigFilePath);
                     if (nuGetUserConfig.PackageSources.ContainsKey(_sourceNameTextBox.Text))
                     {
                         MessageBox.Show("源名称 “" + _sourceNameTextBox.Text + "” 已存在！", "警告");
                         return;
                     }
                     nuGetUserConfig.PackageSources.Add(_sourceNameTextBox.Text, _sourcePathTextBox.Text);
-
-                    yamlWriter = File.CreateText("Config/NuGetUser.Config.yml");
-                    yamlSerializer = new Serializer();
-                    yamlSerializer.Serialize(yamlWriter, nuGetUserConfig);
-                    yamlWriter.Close();
+                    YamlFileIO.Writer<NuGetUserConfigModel>(nuGetUserConfigFilePath, nuGetUserConfig);
 
                     // 更新左侧视图列表
                     HandleLeftMenuOptions();
@@ -388,17 +356,9 @@ namespace StudioClient.Views
 
                 case "更新":
                     // 数据持久化
-                    yamlReader = File.OpenText("Config/NuGetUser.Config.yml");
-                    yamlDeserializer = new Deserializer();
-                    nuGetUserConfig = yamlDeserializer.Deserialize<NuGetUserConfigModel>(yamlReader);
-                    yamlReader.Close();
-
+                    nuGetUserConfig = YamlFileIO.Reader<NuGetUserConfigModel>(nuGetUserConfigFilePath);
                     nuGetUserConfig.PackageSources[_sourceNameTextBox.Text] = _sourcePathTextBox.Text;
-
-                    yamlWriter = File.CreateText("Config/NuGetUser.Config.yml");
-                    yamlSerializer = new Serializer();
-                    yamlSerializer.Serialize(yamlWriter, nuGetUserConfig);
-                    yamlWriter.Close();
+                    YamlFileIO.Writer<NuGetUserConfigModel>(nuGetUserConfigFilePath, nuGetUserConfig);
 
                     // 更新左侧视图列表
                     HandleLeftMenuOptions();
@@ -426,7 +386,7 @@ namespace StudioClient.Views
                 MessageBox.Show("源路径不得为空！", "警告");
                 return false;
             }
-            string strCMD = @".\Resources\Toolset\nuget.exe" + " list -Source \"" + _sourcePathTextBox.Text + "\"";
+            string strCMD = @".\Resources\NuGet\nuget.exe" + " list -Source \"" + _sourcePathTextBox.Text + "\"";
             if (HandleExecuteCMD(strCMD).StateCode != 0)
             {
                 MessageBox.Show("无法验证软件包源路径 “" + _sourcePathTextBox.Text + "”", "警告");

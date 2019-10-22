@@ -13,7 +13,7 @@ using ActiproSoftware.Windows;
 using ActiproSoftware.Windows.Input;
 #endif
 
-namespace StudioClient.Common {
+namespace StudioClient.Model {
 	
 	/// <summary>
 	/// Provides a common implementation of a tree node model.

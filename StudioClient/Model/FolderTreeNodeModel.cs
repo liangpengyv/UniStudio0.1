@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using System.Windows.Media.Imaging;
 #endif
 
-namespace StudioClient.Common {
+namespace StudioClient.Model {
 	
 	/// <summary>
 	/// Provides a tree node model implementation for folders that can toggle the image based on expansion state.

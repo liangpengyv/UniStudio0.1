@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace StudioClient.Common
+namespace StudioClient.Model
 {
     /// <summary>
     /// 项目配置文件模型 - project.yml

@@ -4,9 +4,10 @@
 using ActiproSoftware.UI.Xaml.Controls.Grids;
 #else
 using ActiproSoftware.Windows.Controls.Grids;
+using StudioClient.Model;
 #endif
 
-namespace StudioClient.Common {
+namespace StudioClient.Utils {
 	
 	/// <summary>
 	/// An adapter that can provide an item's hierarchy and visual state data for usage in a <see cref="TreeListBox"/>.

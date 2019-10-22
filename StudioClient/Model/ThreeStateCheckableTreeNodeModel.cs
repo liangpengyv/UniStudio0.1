@@ -1,7 +1,7 @@
 ﻿using System.Collections.Specialized;
 using System.ComponentModel;
 
-namespace StudioClient.Common {
+namespace StudioClient.Model {
 	
 	/// <summary>
 	/// Provides a common implementation of a tree node model that supports three-state checking.

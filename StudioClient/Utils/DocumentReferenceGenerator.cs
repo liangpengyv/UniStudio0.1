@@ -2,7 +2,7 @@
 using System.Windows.Media.Imaging;
 using ActiproSoftware.Windows.DocumentManagement;
 
-namespace StudioClient.Common
+namespace StudioClient.Utils
 {
 
     /// <summary>

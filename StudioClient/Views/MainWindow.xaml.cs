@@ -10,9 +10,9 @@ using ActiproSoftware.Windows.Controls.Docking;
 using ActiproSoftware.Windows.Controls.Ribbon;
 using ActiproSoftware.Windows.Controls.Ribbon.Controls;
 using ActiproSoftware.Windows.Controls.Grids;
-using StudioClient.Common;
+using StudioClient.Utils;
+using StudioClient.Model;
 using System.Windows.Media.Imaging;
-using YamlDotNet.Serialization;
 using System.Collections.Generic;
 using StudioClient.ExpressionEditor;
 using System.Text;
@@ -24,8 +24,6 @@ using System.Activities.Debugger;
 using System.Activities.Presentation.Services;
 using System.Activities.Presentation.Debug;
 using System.Windows.Threading;
-using System.Reflection;
-using System.Activities.Presentation.Toolbox;
 
 namespace StudioClient.Views
 {
@@ -59,12 +57,8 @@ namespace StudioClient.Views
 
             #region Temp 放在这里用于自动打开 BlankProject 测试项目，便于测试（发布版本时请删除）
             // TODO Temp 放在这里用于自动打开 BlankProject 测试项目，便于测试（发布版本时请删除）
-            string projectFileName = @"C:\Users\lpy\Documents\UniStudio\BlankProject\project.yml";
-
-            StreamReader yamlReader = File.OpenText(projectFileName);
-            Deserializer yamlDeserializer = new Deserializer();
-            projectConfig = yamlDeserializer.Deserialize<ProjectConfigModel>(yamlReader);
-            yamlReader.Close();
+            const string projectFileName = @"C:\Users\lpy\Documents\UniStudio\BlankProject\project.yml";
+            projectConfig = YamlFileIO.Reader<ProjectConfigModel>(projectFileName);
 
             // 先关闭当前打开的项目
             HandleCloseProject();
@@ -84,7 +78,7 @@ namespace StudioClient.Views
                 {
                     ImageSource = new BitmapImage(new Uri("/Resources/Images/TextDocument16.png", UriKind.Relative)),
                     Name = xamlFile.Name,
-                    Tag = new TreeNodeModelTagData(documentWindow, designer)
+                    Tag = new TreeNodeTagDataModel(documentWindow, designer)
                 };
                 xamlNodeList.Add(xamlNode);
 
@@ -246,8 +240,6 @@ namespace StudioClient.Views
             designer.Save(filePath);
 
             // 创建项目配置文件 project.yml
-            StreamWriter yamlWriter = File.CreateText(Path.Combine(projectPath, "project.yml"));
-            Serializer yamlSerializer = new Serializer();
             var dependencies = new Dictionary<string, string>();
             dependencies.Add("System", "2.3.2");  // 临时写几个假的
             dependencies.Add("System.Core", "3.2.5");
@@ -259,8 +251,7 @@ namespace StudioClient.Views
                 Main = fileName,
                 Dependencies = dependencies
             };
-            yamlSerializer.Serialize(yamlWriter, projectConfig);
-            yamlWriter.Close();
+            YamlFileIO.Writer<ProjectConfigModel>(Path.Combine(projectPath, "project.yml"), projectConfig);
 
             // 构建左侧项目视图
             TreeNodeModel dependenciesNode = new TreeNodeModel
@@ -284,7 +275,7 @@ namespace StudioClient.Views
             {
                 ImageSource = new BitmapImage(new Uri("/Resources/Images/TextDocument16.png", UriKind.Relative)),
                 Name = fileName,
-                Tag = new TreeNodeModelTagData(documentWindow, designer)
+                Tag = new TreeNodeTagDataModel(documentWindow, designer)
             };
             projectRootNode = new TreeNodeModel
             {
@@ -329,10 +320,7 @@ namespace StudioClient.Views
             // 显示文件打开对话框
             if (dialog.ShowDialog() == true)
             {
-                StreamReader yamlReader = File.OpenText(dialog.FileName);
-                Deserializer yamlDeserializer = new Deserializer();
-                projectConfig = yamlDeserializer.Deserialize<ProjectConfigModel>(yamlReader);
-                yamlReader.Close();
+                projectConfig = YamlFileIO.Reader<ProjectConfigModel>(dialog.FileName);
 
                 // 先关闭当前打开的项目
                 HandleCloseProject();
@@ -352,7 +340,7 @@ namespace StudioClient.Views
                     {
                         ImageSource = new BitmapImage(new Uri("/Resources/Images/TextDocument16.png", UriKind.Relative)),
                         Name = xamlFile.Name,
-                        Tag = new TreeNodeModelTagData(documentWindow, designer)
+                        Tag = new TreeNodeTagDataModel(documentWindow, designer)
                     };
                     xamlNodeList.Add(xamlNode);
 
@@ -488,7 +476,7 @@ namespace StudioClient.Views
             {
                 ImageSource = new BitmapImage(new Uri("/Resources/Images/TextDocument16.png", UriKind.Relative)),
                 Name = fileName,
-                Tag = new TreeNodeModelTagData(documentWindow, designer)
+                Tag = new TreeNodeTagDataModel(documentWindow, designer)
             };
             projectRootNode.Children.Add(newNode);
 
@@ -514,7 +502,7 @@ namespace StudioClient.Views
                         if (currentNode.Name.Equals(dockingWindow.Title))
                         {
                             // 找到当前活跃窗口对应的项目节点对象，并保存
-                            TreeNodeModelTagData tagData = currentNode.Tag as TreeNodeModelTagData;
+                            TreeNodeTagDataModel tagData = currentNode.Tag as TreeNodeTagDataModel;
                             tagData.Designer.Flush();
                             tagData.Designer.Save(tagData.DocWindow.SerializationId);
                             MessageBox.Show(currentNode.Name + " 已保存");
@@ -540,7 +528,7 @@ namespace StudioClient.Views
                     if (currentNode.Name.Equals(dockingWindow.Title))
                     {
                         // 找到当前窗口对应的项目节点对象，并保存
-                        TreeNodeModelTagData tagData = currentNode.Tag as TreeNodeModelTagData;
+                        TreeNodeTagDataModel tagData = currentNode.Tag as TreeNodeTagDataModel;
                         tagData.Designer.Flush();
                         tagData.Designer.Save(tagData.DocWindow.SerializationId);
                         MessageBox.Show(currentNode.Name + " 已保存");
@@ -572,7 +560,7 @@ namespace StudioClient.Views
                     _outputTextBox.Text = String.Empty;
 
                     // 找到 Main 工作流对应的项目节点对象，读取里面保存的 designer 对象
-                    TreeNodeModelTagData tagData = currentNode.Tag as TreeNodeModelTagData;
+                    TreeNodeTagDataModel tagData = currentNode.Tag as TreeNodeTagDataModel;
                     tagData.Designer.Flush();
                     this.WorkflowDesigner = tagData.Designer;
                     this.DebuggerService = this.WorkflowDesigner.DebugManagerView;
@@ -783,7 +771,7 @@ namespace StudioClient.Views
         private void On_Project_List_Item_Selecting(object sender, TreeListBoxItemEventArgs e)
         {
             TreeNodeModel currentNode = e.Item as TreeNodeModel;
-            TreeNodeModelTagData nodeTagData = currentNode.Tag as TreeNodeModelTagData;
+            TreeNodeTagDataModel nodeTagData = currentNode.Tag as TreeNodeTagDataModel;
 
             if (nodeTagData != null && !currentNode.IsSelected)
             {
@@ -837,7 +825,7 @@ namespace StudioClient.Views
                     if (currentNode.Name.Equals(currentWindow.Title))
                     {
                         // 找到当前活跃窗口对应的项目节点对象，读取里面保存的 designer 对象，用来更新 designer 关联的视图内容
-                        TreeNodeModelTagData tagData = currentNode.Tag as TreeNodeModelTagData;
+                        TreeNodeTagDataModel tagData = currentNode.Tag as TreeNodeTagDataModel;
                         tagData.Designer.Flush();
                         UpdateLayoutModuleContent(tagData.Designer);
                     }

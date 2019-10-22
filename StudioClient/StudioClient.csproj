@@ -210,19 +210,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Common\CheckableTreeNodeModel.cs" />
-    <Compile Include="Common\CmdExecuteResultModel.cs" />
-    <Compile Include="Common\CustomTrackingParticipant.cs" />
-    <Compile Include="Common\FolderTreeNodeModel.cs" />
-    <Compile Include="Common\NuGetDefaultConfigModel.cs" />
-    <Compile Include="Common\NuGetUserConfigModel.cs" />
-    <Compile Include="Common\ProjectConfigModel.cs" />
-    <Compile Include="Common\ThreeStateCheckableTreeNodeModel.cs" />
-    <Compile Include="Common\TreeNodeModel.cs" />
+    <Compile Include="Model\CheckableTreeNodeModel.cs" />
+    <Compile Include="Model\CmdExecuteResultModel.cs" />
+    <Compile Include="Utils\CustomTrackingParticipant.cs" />
+    <Compile Include="Model\FolderTreeNodeModel.cs" />
+    <Compile Include="Model\NuGetDefaultConfigModel.cs" />
+    <Compile Include="Model\NuGetUserConfigModel.cs" />
+    <Compile Include="Model\ProjectConfigModel.cs" />
+    <Compile Include="Model\ThreeStateCheckableTreeNodeModel.cs" />
+    <Compile Include="Model\TreeNodeModel.cs" />
     <Compile Include="ExpressionEditor\CustomCompletionListBox.cs" />
     <Compile Include="ExpressionEditor\instance.cs" />
     <Compile Include="ExpressionEditor\Language.cs" />
     <Compile Include="ExpressionEditor\Service.cs" />
+    <Compile Include="Utils\YamlFileIO.cs" />
     <Compile Include="Views\ManagePackagesWindow.xaml.cs">
       <DependentUpon>ManagePackagesWindow.xaml</DependentUpon>
     </Compile>
@@ -257,9 +258,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Common\DefaultTreeListBoxItemAdapter.cs" />
-    <Compile Include="Common\DocumentReferenceGenerator.cs" />
-    <Compile Include="Common\TreeNodeModelTagData.cs" />
+    <Compile Include="Utils\DefaultTreeListBoxItemAdapter.cs" />
+    <Compile Include="Utils\DocumentReferenceGenerator.cs" />
+    <Compile Include="Model\TreeNodeTagDataModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -681,7 +682,7 @@
     <Resource Include="Resources\Images\Packages.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Toolset\nuget.exe">
+    <None Include="Resources\NuGet\nuget.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
