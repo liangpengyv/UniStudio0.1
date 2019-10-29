@@ -223,6 +223,7 @@
     <Compile Include="ExpressionEditor\instance.cs" />
     <Compile Include="ExpressionEditor\Language.cs" />
     <Compile Include="ExpressionEditor\Service.cs" />
+    <Compile Include="Utils\ExecuteCMD.cs" />
     <Compile Include="Utils\YamlFileIO.cs" />
     <Compile Include="Views\ManagePackagesWindow.xaml.cs">
       <DependentUpon>ManagePackagesWindow.xaml</DependentUpon>

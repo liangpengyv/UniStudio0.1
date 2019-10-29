@@ -16,6 +16,7 @@ namespace StudioClient.Views
     {
         const string nuGetDefaultConfigFilePath = "Config/NuGetDefault.Config.yml";
         const string nuGetUserConfigFilePath = "Config/NuGetUser.Config.yml";
+        const string nuGetToolPath = @".\Resources\NuGet\nuget.exe";
 
         public ManagePackagesWindow()
         {
@@ -123,7 +124,7 @@ namespace StudioClient.Views
                     nuGetDefaultConfig = YamlFileIO.Reader<NuGetDefaultConfigModel>(nuGetDefaultConfigFilePath);
                     foreach (var tempSource in nuGetDefaultConfig.PackageSources)
                     {
-                        strCMD = @".\Resources\NuGet\nuget.exe" + " list -Source \"" + tempSource.Value + "\"";
+                        strCMD = nuGetToolPath + " list -Source \"" + tempSource.Value + "\"";
                         executeResult = ExecuteCMD.Handle(strCMD);
 
                         if (executeResult.StateCode == 0)
@@ -154,7 +155,7 @@ namespace StudioClient.Views
                     nuGetUserConfig = YamlFileIO.Reader<NuGetUserConfigModel>(nuGetUserConfigFilePath);
                     foreach (var tempSource in nuGetUserConfig.PackageSources)
                     {
-                        strCMD = @".\Resources\NuGet\nuget.exe" + " list -Source \"" + tempSource.Value + "\"";
+                        strCMD = nuGetToolPath + " list -Source \"" + tempSource.Value + "\"";
                         executeResult = ExecuteCMD.Handle(strCMD);
 
                         if (executeResult.StateCode == 0)
@@ -189,7 +190,7 @@ namespace StudioClient.Views
                     _leftMenuOptions.SelectedIndex = -1;
 
                     KeyValuePair<string, string> packageSources = (KeyValuePair<string, string>)selectedItem.Tag;
-                    strCMD = @".\Resources\NuGet\nuget.exe" + " list -Source \"" + packageSources.Value + "\"";
+                    strCMD = nuGetToolPath + " list -Source \"" + packageSources.Value + "\"";
                     executeResult = ExecuteCMD.Handle(strCMD);
 
                     if (executeResult.StateCode == 0)
@@ -338,7 +339,7 @@ namespace StudioClient.Views
                 MessageBox.Show("源路径不得为空！", "警告");
                 return false;
             }
-            string strCMD = @".\Resources\NuGet\nuget.exe" + " list -Source \"" + _sourcePathTextBox.Text + "\"";
+            string strCMD = nuGetToolPath + " list -Source \"" + _sourcePathTextBox.Text + "\"";
             if (ExecuteCMD.Handle(strCMD).StateCode != 0)
             {
                 MessageBox.Show("无法验证软件包源路径 “" + _sourcePathTextBox.Text + "”", "警告");

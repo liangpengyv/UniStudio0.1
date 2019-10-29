@@ -24,14 +24,21 @@ using System.Activities.Debugger;
 using System.Activities.Presentation.Services;
 using System.Activities.Presentation.Debug;
 using System.Windows.Threading;
+using System.Reflection;
+using System.Activities.Presentation.Toolbox;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace StudioClient.Views
 {
     public partial class MainWindow : RibbonWindow
     {
+        const string nuGetToolPath = @".\Resources\NuGet\nuget.exe";
+        const string outputDirectory = @".\PackageCache";
+
         private string projectPath;
         private TreeNodeModel projectRootNode;
         public ProjectConfigModel projectConfig;
+        private List<string> projectCustomActivityDllFilePathList;
 
         public WorkflowDesigner WorkflowDesigner { get; set; }
         public IDesignerDebugView DebuggerService { get; set; }
@@ -123,7 +130,7 @@ namespace StudioClient.Views
             mainDocumentWindow?.Activate();
 
             // 更新 Activities 工具箱内容
-            UpdateActivitiesToolBoxContent();
+            UpdateActivitiesToolBoxContent(projectConfig);
 
             // 已经有打开的具体项目实例，更新一些状态
             _appMenu.CanClose = true;
@@ -157,38 +164,154 @@ namespace StudioClient.Views
         }
 
         /// <summary>
+        /// 初始化（恢复）Activity 工具箱默认状态
+        /// </summary>
+        /// <returns></returns>
+        private void InitActivitiesToolBoxContent()
+        {
+            ToolboxControl ctrl = new ToolboxControl();
+            ToolboxCategory category;
+
+            category = new ToolboxCategory("Debug");
+            category.Add(new ToolboxItemWrapper(typeof(System.Activities.Statements.WriteLine)));
+            ctrl.Categories.Add(category);
+
+            category = new ToolboxCategory("Execute");
+            category.Add(new ToolboxItemWrapper(typeof(System.Activities.Statements.InvokeMethod)));
+            ctrl.Categories.Add(category);
+
+            category = new ToolboxCategory("Flowchart");
+            category.Add(new ToolboxItemWrapper(typeof(System.Activities.Statements.FlowDecision)));
+            category.Add(new ToolboxItemWrapper(typeof(System.Activities.Statements.Flowchart)));
+            ctrl.Categories.Add(category);
+
+            category = new ToolboxCategory("State Machine");
+            category.Add(new ToolboxItemWrapper(typeof(System.Activities.Statements.State)));
+            category.Add(new ToolboxItemWrapper(typeof(System.Activities.Statements.StateMachine)));
+            ctrl.Categories.Add(category);
+
+            category = new ToolboxCategory("Error Handing");
+            category.Add(new ToolboxItemWrapper(typeof(System.Activities.Statements.Rethrow)));
+            category.Add(new ToolboxItemWrapper(typeof(System.Activities.Statements.TerminateWorkflow)));
+            category.Add(new ToolboxItemWrapper(typeof(System.Activities.Statements.Throw)));
+            category.Add(new ToolboxItemWrapper(typeof(System.Activities.Statements.TryCatch)));
+            ctrl.Categories.Add(category);
+
+            category = new ToolboxCategory("Control");
+            category.Add(new ToolboxItemWrapper(typeof(System.Activities.Statements.Assign)));
+            category.Add(new ToolboxItemWrapper(typeof(System.Activities.Statements.CancellationScope)));
+            category.Add(new ToolboxItemWrapper(typeof(System.Activities.Statements.Delay)));
+            category.Add(new ToolboxItemWrapper(typeof(System.Activities.Statements.DoWhile)));
+            category.Add(new ToolboxItemWrapper(typeof(System.Activities.Statements.If)));
+            category.Add(new ToolboxItemWrapper(typeof(System.Activities.Statements.Parallel)));
+            category.Add(new ToolboxItemWrapper(typeof(System.Activities.Statements.Pick)));
+            category.Add(new ToolboxItemWrapper(typeof(System.Activities.Statements.PickBranch)));
+            category.Add(new ToolboxItemWrapper(typeof(System.Activities.Statements.Sequence)));
+            category.Add(new ToolboxItemWrapper(typeof(System.Activities.Statements.While)));
+            ctrl.Categories.Add(category);
+
+            _activities.Content = ctrl;
+        }
+
+        /// <summary>
         /// 更新 Activities 工具项模块内容
         /// </summary>
-        private void UpdateActivitiesToolBoxContent()
+        private void UpdateActivitiesToolBoxContent(ProjectConfigModel projectConfig)
         {
-            // ↓↓↓ 下面部分为：--搞懂编程实现动态加载 DLL，并过滤 Activity 类资源 加载到 左侧工具栏-- 的示例程序 ↓↓↓
+            // 包源（作为 Url）的列表字符串连接，供下方执行 nuget 命令使用
+            const string nuGetDefaultConfigFilePath = "Config/NuGetDefault.Config.yml";
+            const string nuGetUserConfigFilePath = "Config/NuGetUser.Config.yml";
+            string strSourceList = "";
+            foreach (var sourceItem in YamlFileIO.Reader<NuGetDefaultConfigModel>(nuGetDefaultConfigFilePath).PackageSources)
+            {
+                strSourceList += " -Source \"" + sourceItem.Value + "\"";
+            }
+            foreach (var sourceItem in YamlFileIO.Reader<NuGetUserConfigModel>(nuGetUserConfigFilePath).PackageSources)
+            {
+                strSourceList += " -Source \"" + sourceItem.Value + "\"";
+            }
 
-            // TODO 连接 当前项目的加载逻辑（nuget install -> overwrite project config -> load activities）
+            // 根据配置文件依赖列表，依次安装
+            List<Assembly> assemblies = new List<Assembly>();
+            projectCustomActivityDllFilePathList = new List<string>();
+            foreach (var dependencyItem in projectConfig.Dependencies)
+            {
+                // nuget install 命令参数注解，详见 https://docs.microsoft.com/zh-cn/nuget/reference/cli-reference/cli-ref-install
+                // -Version         指定要安装的包的版本
+                // -OutputDirectory 指定在其中安装包的文件夹。如果未指定文件夹，则使用当前文件夹
+                // -Source          指定要使用的包源（作为 Url）的列表。如果省略，则该命令使用配置文件中提供的源
+                string strCMD = nuGetToolPath + " install " + dependencyItem.Key + " -Version " + dependencyItem.Value + " -OutputDirectory " + outputDirectory + strSourceList;
+                CmdExecuteResultModel executeResult = ExecuteCMD.Handle(strCMD);
 
-            //const string dllPath = @"C:\Users\lpy\.nuget\packages\1MyPackage\1.0.0\lib\CustomActivities.dll";
-            //Console.WriteLine(Directory.GetCurrentDirectory() + "-------------------------------");
-            //File.Copy(dllPath, Directory.GetCurrentDirectory() + @"\CustomActivities.dll", true);
+                if (executeResult.StateCode == 0)
+                {
+                    // 执行成功
+                    List<FileInfo> activitityDllFileInfoList = GetAllDllFiles(new DirectoryInfo(Directory.GetCurrentDirectory() + outputDirectory + "\\" + dependencyItem.Key + "." + dependencyItem.Value));
+                    foreach (FileInfo dllFileInfo in activitityDllFileInfoList)
+                    {
+                        string copyToTarget = Directory.GetCurrentDirectory() + "\\" + dllFileInfo.Name;
+                        projectCustomActivityDllFilePathList.Add(copyToTarget);
+                        File.Copy(dllFileInfo.FullName, copyToTarget, true);
+                        assemblies.Add(Assembly.LoadFile(copyToTarget));
+                    }
+                }
+                else
+                {
+                    // 执行失败
+                    MessageBox.Show(dependencyItem.Key + " - " + dependencyItem.Value + " Activity 库，加载失败！\n\n失败命令：\n" + strCMD);
+                }
+            }
 
+            // 加载 Activity 到左侧工具箱 Custom 分类下
+            // TODO 调整加载 Activity 时按照 命名空间层级 分类
+            ToolboxControl ctrl = _activities.Content as ToolboxControl;
+            ToolboxCategory custom = new ToolboxCategory("Custom");
+            foreach (Assembly assembly in assemblies)
+            {
+                foreach (var typeItem in assembly.GetTypes())
+                {
+                    Console.WriteLine(typeItem.FullName);
+                    if (typeItem.BaseType == typeof(AsyncCodeActivity) ||
+                        typeItem.BaseType == typeof(CodeActivity)
+                        // || …… 其他继承 Activity 衍生类
+                        )
+                    {
+                        ToolboxItemWrapper toolboxItemWrapper = new ToolboxItemWrapper(typeItem.ToString(), assembly.FullName, null, typeItem.Name);
+                        custom.Add(toolboxItemWrapper);
+                    }
+                }
+            }
+            ctrl.Categories.Add(custom);
+        }
 
-            //Assembly assembly = Assembly.LoadFile(dllPath);
-            //ToolboxControl ctrl = _activities.Content as ToolboxControl;
-            //ToolboxCategory custom = new ToolboxCategory("Custom");
+        /// <summary>
+        /// 递归获取指定文件夹下的所有 Dll 文件
+        /// </summary>
+        /// <param name="directoryInfo"></param>
+        /// <returns></returns>
+        private List<FileInfo> GetAllDllFiles(DirectoryInfo directoryInfo)
+        {
+            List<FileInfo> fileInfoList = new List<FileInfo>();
 
-            //Console.WriteLine("--------------------------\n");
+            // 找出当前文件夹下所有 Dll 文件
+            foreach (var fileInfo in directoryInfo.GetFiles())
+            {
+                if (String.Equals(fileInfo.Name.Substring(fileInfo.Name.LastIndexOf('.')), ".dll", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    fileInfoList.Add(fileInfo);
+                }
+            }
 
-            //foreach (var typeItem in assembly.GetTypes())
-            //{
-            //    if (typeItem.BaseType == typeof(AsyncCodeActivity))
-            //    {
-            //        ToolboxItemWrapper toolboxItemWrapper = new ToolboxItemWrapper(typeItem.ToString(), assembly.FullName, null, "SendMail(temp test)");
-            //        custom.Add(toolboxItemWrapper);
-            //        Console.WriteLine(typeItem.ToString());
-            //        Console.WriteLine(assembly.FullName);
-            //    }
-            //}
-            //Console.WriteLine("--------------------------\n");
+            // 递归找出子文件夹下所有 Dll 文件
+            if (directoryInfo.GetDirectories().Length != 0)
+            {
+                foreach (var subDirectoryInfo in directoryInfo.GetDirectories())
+                {
+                    fileInfoList.AddRange(GetAllDllFiles(subDirectoryInfo));
+                }
+            }
 
-            //ctrl.Categories.Add(custom);
+            return fileInfoList;
         }
 
         /// <summary>
@@ -241,9 +364,8 @@ namespace StudioClient.Views
 
             // 创建项目配置文件 project.yml
             var dependencies = new Dictionary<string, string>();
-            dependencies.Add("System", "2.3.2");  // 临时写几个假的
-            dependencies.Add("System.Core", "3.2.5");
-            dependencies.Add("PresentationCore", "4.2.0");
+            dependencies.Add("MyPackage", "1.0.0");  // ToDo 临时写几个假的，记得改回来
+            dependencies.Add("ctivitiesConvert2PDF", "1.0.0");
             projectConfig = new ProjectConfigModel
             {
                 Name = projectName,
@@ -293,7 +415,7 @@ namespace StudioClient.Views
             documentWindow.Activate();
 
             // 更新 Activities 工具箱内容
-            UpdateActivitiesToolBoxContent();
+            UpdateActivitiesToolBoxContent(projectConfig);
 
             // 已经有打开的具体项目实例，更新一些状态
             _appMenu.CanClose = true;
@@ -385,7 +507,7 @@ namespace StudioClient.Views
                 mainDocumentWindow?.Activate();
 
                 // 更新 Activities 工具箱内容
-                UpdateActivitiesToolBoxContent();
+                UpdateActivitiesToolBoxContent(projectConfig);
 
                 // 已经有打开的具体项目实例，更新一些状态
                 _appMenu.CanClose = true;
@@ -412,7 +534,16 @@ namespace StudioClient.Views
         {
             // 清空当前项目实例的资源
             _projectNodeList.RootItem = null;
-            //_activities.Content = null;
+            InitActivitiesToolBoxContent();
+            if (projectCustomActivityDllFilePathList != null && projectCustomActivityDllFilePathList.Count > 0)
+            {
+                // 删除当前项目引用的 自定义 Activity 的 Dll 文件
+                foreach (string dllFilePath in projectCustomActivityDllFilePathList)
+                {
+                    // TODO 卸载当前加载的 自定义 Activity 相关 Dll 文件，并删除
+                    //File.Delete(dllFilePath);
+                }
+            }
 
             // 关闭已打开的工作流设计器窗口
             _dockSite.CloseAllDocuments();
