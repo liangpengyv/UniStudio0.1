@@ -206,7 +206,7 @@
                               PrimaryDocumentChanged="OnDockSitePrimaryDocumentChanged">
                 <docking:SplitContainer Orientation="Horizontal">
                     <!-- Left -->
-                    <docking:ToolWindowContainer>
+                    <docking:ToolWindowContainer x:Name="_leftToolWindowContainer">
                         <docking:ToolWindow Title="项目" CanClose="False" CanBecomeDocument="False">
                             <Grid>
                                 <grids:TreeListBox x:Name="_projectNodeList" Width="Auto" BorderThickness="0" ItemSelecting="On_Project_List_Item_Selecting" IsRootItemVisible="True" TopLevelIndent="2" HorizontalAlignment="Left">

@@ -26,7 +26,6 @@ using System.Activities.Presentation.Debug;
 using System.Windows.Threading;
 using System.Reflection;
 using System.Activities.Presentation.Toolbox;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace StudioClient.Views
 {
@@ -34,11 +33,13 @@ namespace StudioClient.Views
     {
         const string nuGetToolPath = @".\Resources\NuGet\nuget.exe";
         const string outputDirectory = @".\PackageCache";
+        const string currentProjectDomainName = "Current Project Domain";
 
         private string projectPath;
         private TreeNodeModel projectRootNode;
         public ProjectConfigModel projectConfig;
         private List<string> projectCustomActivityDllFilePathList;
+        private List<AppDomain> projectCustomActivityDllLoadAppDomainList;
 
         public WorkflowDesigner WorkflowDesigner { get; set; }
         public IDesignerDebugView DebuggerService { get; set; }
@@ -234,6 +235,7 @@ namespace StudioClient.Views
             // 根据配置文件依赖列表，依次安装
             List<Assembly> assemblies = new List<Assembly>();
             projectCustomActivityDllFilePathList = new List<string>();
+            projectCustomActivityDllLoadAppDomainList = new List<AppDomain>();
             foreach (var dependencyItem in projectConfig.Dependencies)
             {
                 // nuget install 命令参数注解，详见 https://docs.microsoft.com/zh-cn/nuget/reference/cli-reference/cli-ref-install
@@ -252,7 +254,11 @@ namespace StudioClient.Views
                         string copyToTarget = Directory.GetCurrentDirectory() + "\\" + dllFileInfo.Name;
                         projectCustomActivityDllFilePathList.Add(copyToTarget);
                         File.Copy(dllFileInfo.FullName, copyToTarget, true);
-                        assemblies.Add(Assembly.LoadFile(copyToTarget));
+
+                        AppDomain appDomain = AppDomain.CreateDomain(currentProjectDomainName);
+                        projectCustomActivityDllLoadAppDomainList.Add(appDomain);
+                        ApplicationProxy proxy = appDomain.CreateInstanceAndUnwrap(Assembly.GetAssembly(typeof(ApplicationProxy)).FullName, typeof(ApplicationProxy).ToString()) as ApplicationProxy;
+                        assemblies.Add(proxy.Load(dllFileInfo.FullName));
                     }
                 }
                 else
@@ -266,9 +272,10 @@ namespace StudioClient.Views
             // TODO 调整加载 Activity 时按照 命名空间层级 分类
             ToolboxControl ctrl = _activities.Content as ToolboxControl;
             ToolboxCategory custom = new ToolboxCategory("Custom");
+            ToolboxItemWrapper toolboxItemWrapper;
             foreach (Assembly assembly in assemblies)
             {
-                foreach (var typeItem in assembly.GetTypes())
+                foreach (Type typeItem in assembly.GetTypes())
                 {
                     Console.WriteLine(typeItem.FullName);
                     if (typeItem.BaseType == typeof(AsyncCodeActivity) ||
@@ -276,7 +283,7 @@ namespace StudioClient.Views
                         // || …… 其他继承 Activity 衍生类
                         )
                     {
-                        ToolboxItemWrapper toolboxItemWrapper = new ToolboxItemWrapper(typeItem.ToString(), assembly.FullName, null, typeItem.Name);
+                        toolboxItemWrapper = new ToolboxItemWrapper(typeItem);
                         custom.Add(toolboxItemWrapper);
                     }
                 }
@@ -364,8 +371,8 @@ namespace StudioClient.Views
 
             // 创建项目配置文件 project.yml
             var dependencies = new Dictionary<string, string>();
-            dependencies.Add("MyPackage", "1.0.0");  // ToDo 临时写几个假的，记得改回来
-            dependencies.Add("ctivitiesConvert2PDF", "1.0.0");
+            dependencies.Add("1MyPackage", "1.0.0");  // ToDo 临时写几个假的，记得改回来
+            dependencies.Add("ActivitiesConvert2PDF", "1.0.0");
             projectConfig = new ProjectConfigModel
             {
                 Name = projectName,
@@ -534,6 +541,14 @@ namespace StudioClient.Views
         {
             // 清空当前项目实例的资源
             _projectNodeList.RootItem = null;
+            if (projectCustomActivityDllLoadAppDomainList != null && projectCustomActivityDllLoadAppDomainList.Count > 0)
+            {
+                foreach (var appDomainItem in projectCustomActivityDllLoadAppDomainList)
+                {
+                    AppDomain.Unload(appDomainItem);
+                }
+                projectCustomActivityDllLoadAppDomainList.Clear();
+            }
             InitActivitiesToolBoxContent();
             if (projectCustomActivityDllFilePathList != null && projectCustomActivityDllFilePathList.Count > 0)
             {
@@ -552,6 +567,9 @@ namespace StudioClient.Views
             _appMenu.CanClose = false;
             _appMenuClose.IsEnabled = false;
             ApplicationName = "Uni Studio";
+
+            // TODO 最终检查这里需不需要，强制进行垃圾回收
+            GC.Collect();
         }
 
         /// <summary>
@@ -984,6 +1002,14 @@ namespace StudioClient.Views
                     System.Diagnostics.Process.Start("https://www.baidu.com/");
                     break;
             }
+        }
+    }
+
+    internal class ApplicationProxy : MarshalByRefObject
+    {
+        public Assembly Load(string filePath)
+        {
+            return Assembly.LoadFrom(filePath);
         }
     }
 }
