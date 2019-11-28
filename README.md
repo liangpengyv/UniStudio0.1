@@ -12,26 +12,18 @@
 
 ## 仓库目录
 
-```
-├─CustomActivities	# 统一管理自定义 Activity （每个自定义 Activity 置于 一个文件夹内）
-
-│  ├─SendMail	# 自定义 SendMail Activity（示例）
-
-│  │   └─SomeResources……
-
-│  └─OtherActivity……
-
-└─StudioClient	# 客户端程序，主要包含用户界面及交互逻辑
-
-    ├─Common	# 公共类，一些工具类、Model 类等
-
+```powershell
+├─CustomActivities		# 统一管理自定义 Activity （每个自定义 Activity 置于 一个文件夹内）
+│  └─SendMail			# 自定义 SendMail Activity（示例）
+└─StudioClient			# 客户端程序，主要包含用户界面及交互逻辑
+    ├─Config
     ├─ExpressionEditor	# 表达式编辑器，用于自定义 Designer 智能提示
-
-    ├─Resources	# 资源目录
-
-    │  └─Images
-
-    ├─Template	# 用于存放各类工作流模板
-
-    └─Views	# 用户界面及交互逻辑
+    ├─Model				# Model 类
+    ├─Resources			# 资源目录
+    │  ├─Images			# 图片资源
+    │  ├─NuGet			# NuGet 工具及 install 目录
+    │  └─Template		# 用于存放各类工作流模板
+    ├─Utils				# 公共工具类
+    └─Views				# 用户界面及交互逻辑
 ```
+

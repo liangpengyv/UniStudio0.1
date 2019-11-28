@@ -258,7 +258,7 @@ namespace StudioClient.Views
                         AppDomain appDomain = AppDomain.CreateDomain(currentProjectDomainName);
                         projectCustomActivityDllLoadAppDomainList.Add(appDomain);
                         ApplicationProxy proxy = appDomain.CreateInstanceAndUnwrap(Assembly.GetAssembly(typeof(ApplicationProxy)).FullName, typeof(ApplicationProxy).ToString()) as ApplicationProxy;
-                        assemblies.Add(proxy.Load(dllFileInfo.FullName));
+                        assemblies.Add(proxy.DoLoad(dllFileInfo.FullName));
                     }
                 }
                 else
@@ -288,7 +288,7 @@ namespace StudioClient.Views
                     }
                 }
             }
-            ctrl.Categories.Add(custom);
+            ctrl.Categories.Add(custom);  // TODO 这里（UI控件）引用的程序集如何卸载，释放相关资源呢？？？？？？？？？？？
         }
 
         /// <summary>
@@ -1007,7 +1007,12 @@ namespace StudioClient.Views
 
     internal class ApplicationProxy : MarshalByRefObject
     {
-        public Assembly Load(string filePath)
+        /// <summary>
+        /// 已知文件路径加载程序集
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public Assembly DoLoad(string filePath)
         {
             return Assembly.LoadFrom(filePath);
         }
