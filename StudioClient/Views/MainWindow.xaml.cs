@@ -38,8 +38,8 @@ namespace StudioClient.Views
         private string projectPath;
         private TreeNodeModel projectRootNode;
         public ProjectConfigModel projectConfig;
-        private List<string> projectCustomActivityDllFilePathList;
         private List<AppDomain> projectCustomActivityDllLoadAppDomainList;
+        private string currentDllFileFullName;
 
         public WorkflowDesigner WorkflowDesigner { get; set; }
         public IDesignerDebugView DebuggerService { get; set; }
@@ -234,7 +234,6 @@ namespace StudioClient.Views
 
             // 根据配置文件依赖列表，依次安装
             List<Assembly> assemblies = new List<Assembly>();
-            projectCustomActivityDllFilePathList = new List<string>();
             projectCustomActivityDllLoadAppDomainList = new List<AppDomain>();
             foreach (var dependencyItem in projectConfig.Dependencies)
             {
@@ -251,13 +250,12 @@ namespace StudioClient.Views
                     List<FileInfo> activitityDllFileInfoList = GetAllDllFiles(new DirectoryInfo(Directory.GetCurrentDirectory() + outputDirectory + "\\" + dependencyItem.Key + "." + dependencyItem.Value));
                     foreach (FileInfo dllFileInfo in activitityDllFileInfoList)
                     {
-                        string copyToTarget = Directory.GetCurrentDirectory() + "\\" + dllFileInfo.Name;
-                        projectCustomActivityDllFilePathList.Add(copyToTarget);
-                        File.Copy(dllFileInfo.FullName, copyToTarget, true);
-
                         AppDomain appDomain = AppDomain.CreateDomain(currentProjectDomainName);
                         projectCustomActivityDllLoadAppDomainList.Add(appDomain);
                         ApplicationProxy proxy = appDomain.CreateInstanceAndUnwrap(Assembly.GetAssembly(typeof(ApplicationProxy)).FullName, typeof(ApplicationProxy).ToString()) as ApplicationProxy;
+
+                        currentDllFileFullName = dllFileInfo.FullName;
+                        AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
                         assemblies.Add(proxy.DoLoad(dllFileInfo.FullName));
                     }
                 }
@@ -277,18 +275,29 @@ namespace StudioClient.Views
             {
                 foreach (Type typeItem in assembly.GetTypes())
                 {
-                    Console.WriteLine(typeItem.FullName);
-                    if (typeItem.BaseType == typeof(AsyncCodeActivity) ||
-                        typeItem.BaseType == typeof(CodeActivity)
-                        // || …… 其他继承 Activity 衍生类
-                        )
+                    if (typeItem.BaseType == typeof(CodeActivity) ||
+                        typeItem.BaseType == typeof(AsyncCodeActivity) ||
+                        typeItem.BaseType == typeof(NativeActivity) ||
+                        typeItem.BaseType == typeof(Activity))
                     {
                         toolboxItemWrapper = new ToolboxItemWrapper(typeItem);
                         custom.Add(toolboxItemWrapper);
                     }
                 }
             }
-            ctrl.Categories.Add(custom);  // TODO 这里（UI控件）引用的程序集如何卸载，释放相关资源呢？？？？？？？？？？？
+
+            ctrl.Categories.Add(custom);
+        }
+
+        /// <summary>
+        /// 解析当前应用程序域内指定目录下的DLL
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            return Assembly.LoadFrom(currentDllFileFullName);
         }
 
         /// <summary>
@@ -550,15 +559,6 @@ namespace StudioClient.Views
                 projectCustomActivityDllLoadAppDomainList.Clear();
             }
             InitActivitiesToolBoxContent();
-            if (projectCustomActivityDllFilePathList != null && projectCustomActivityDllFilePathList.Count > 0)
-            {
-                // 删除当前项目引用的 自定义 Activity 的 Dll 文件
-                foreach (string dllFilePath in projectCustomActivityDllFilePathList)
-                {
-                    // TODO 卸载当前加载的 自定义 Activity 相关 Dll 文件，并删除
-                    //File.Delete(dllFilePath);
-                }
-            }
 
             // 关闭已打开的工作流设计器窗口
             _dockSite.CloseAllDocuments();
