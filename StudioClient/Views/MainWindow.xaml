@@ -179,6 +179,11 @@
                     <ribbon:Group Label="依赖">
                         <ribbon:Button Label="管理&#x0020;软件包" Click="On_Manage_Packages_Click" ImageSourceLarge="/Resources/Images/Packages.png"/>
                     </ribbon:Group>
+                    <ribbon:Group Label="部署">
+                        <ribbon:StackPanel ItemVariantBehavior="AlwaysMedium">
+                            <TextBlock>占坑ing……</TextBlock>
+                        </ribbon:StackPanel>
+                    </ribbon:Group>
                 </ribbon:Tab>
                 <ribbon:Tab Label="执行">
                     <ribbon:Group Label="启动器">

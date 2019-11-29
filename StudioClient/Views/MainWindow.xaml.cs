@@ -250,13 +250,15 @@ namespace StudioClient.Views
                     List<FileInfo> activitityDllFileInfoList = GetAllDllFiles(new DirectoryInfo(Directory.GetCurrentDirectory() + outputDirectory + "\\" + dependencyItem.Key + "." + dependencyItem.Value));
                     foreach (FileInfo dllFileInfo in activitityDllFileInfoList)
                     {
+                        // 创建 AppDomain 代理，以便在关闭项目或卸载活动包时，通过 UnLoad 代理，卸载其挂载的资源
                         AppDomain appDomain = AppDomain.CreateDomain(currentProjectDomainName);
                         projectCustomActivityDllLoadAppDomainList.Add(appDomain);
                         ApplicationProxy proxy = appDomain.CreateInstanceAndUnwrap(Assembly.GetAssembly(typeof(ApplicationProxy)).FullName, typeof(ApplicationProxy).ToString()) as ApplicationProxy;
 
+                        // 注册程序集解析时的处理的事件，用于按照需求指定加载程序集的目录
                         currentDllFileFullName = dllFileInfo.FullName;
                         AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-                        assemblies.Add(proxy.DoLoad(dllFileInfo.FullName));
+                        assemblies.Add(proxy.DoLoad(currentDllFileFullName));
                     }
                 }
                 else
@@ -567,9 +569,6 @@ namespace StudioClient.Views
             _appMenu.CanClose = false;
             _appMenuClose.IsEnabled = false;
             ApplicationName = "Uni Studio";
-
-            // TODO 最终检查这里需不需要，强制进行垃圾回收
-            GC.Collect();
         }
 
         /// <summary>
