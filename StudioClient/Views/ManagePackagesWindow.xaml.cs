@@ -222,11 +222,6 @@ namespace StudioClient.Views
             }
         }
 
-        private void On_Left_Menu_Package_Sources_Selection_Changed(object sender, SelectionChangedEventArgs e)
-        {
-            
-        }
-
         /// <summary>
         /// 点击“添加新源”时候发生
         /// </summary>
